@@ -759,10 +759,14 @@
 
 <!-- Editable content lives in content/ (see README.md). Each file fills in part of LAB. -->
 <script>window.LAB = {};</script>
-<script src="content/publications.js"></script>
-<script src="content/news.js"></script>
-<script src="content/people.js"></script>
-<script src="content/photos.js"></script>
+<script>
+/* the ?v= changes every minute, so edits show up right away instead of after the browser's
+   10-minute cache; written in place so the files still load in order before the code below */
+{
+  const v = Math.floor(Date.now() / 60000);
+  ["publications", "news", "people", "photos"].forEach(f => document.write(`<script src="content/${f}.js?v=${v}"><\/script>`));
+}
+</script>
 <script>
 /* a content file with a typo leaves its list empty instead of breaking the whole page */
 const LIST = name => Array.isArray(LAB[name]) ? LAB[name].filter(x => x && typeof x === "object") : [];

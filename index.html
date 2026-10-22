@@ -757,37 +757,24 @@
 </footer>
 
 
+<!-- Editable content lives in content/ (see README.md). Each file fills in part of LAB. -->
+<script>window.LAB = {};</script>
+<script src="content/publications.js"></script>
+<script src="content/news.js"></script>
+<script src="content/people.js"></script>
+<script src="content/photos.js"></script>
 <script>
+/* a content file with a typo leaves its list empty instead of breaking the whole page */
+const LIST = name => Array.isArray(LAB[name]) ? LAB[name].filter(x => x && typeof x === "object") : [];
+const str = v => v == null ? "" : String(v);
 const PI_RE = /(Simon P?\.? ?Wisnovsky)/g;
-const pubs = [
- ["lab",2026,"Jimmy Kim, Halen Kovacs, Simon Wisnovsky","Rapid discovery of cell-surface glycosylation regulators using a lectin-based magnetic CRISPR screen","Cell Reports Methods","6(8), 101507","https://doi.org/10.1016/j.crmeth.2026.101507"],
- ["lab",2026,"Jimmy Kim, Halen Kovacs, Simon Wisnovsky","CRISPR screens to identify and characterize ligands for glycan-binding proteins","Methods in Enzymology","","https://doi.org/10.1016/bs.mie.2026.03.005"],
- ["lab",2026,"John Daly, Lidia Piatnitca, Mohammed Al-Seragi, Vignesh Krishnamoorthy, Simon Wisnovsky","CRISPR activation screens map the genomic landscape of cancer glycome remodeling","Cell Genomics","6(4), 101139","https://doi.org/10.1016/j.xgen.2026.101139"],
- ["lab",2025,"Olivia Drummond-Guy, John Daly, Angeline Wu, Natalie Stewart, Katie Milne, Chloe Duff, Brad Nelson, Karla Williams, Simon Wisnovsky","Polysialic acid is upregulated on activated immune cells and negatively regulates anticancer immune activity","Frontiers in Oncology","15, 1520948","https://doi.org/10.3389/fonc.2025.1520948"],
- ["lab",2025,"Vignesh Krishnamoorthy, John Daly, Jimmy Kim, Lidia Piatnitca, Katie Yuen, Bhoj Kumar, Mehrnoush Taherzadeh Ghahfarrokhi, Tom Q.T. Bui, Parastoo Azadi, Ly P Vu, Simon Wisnovsky","The glycosyltransferase ST3GAL4 drives immune evasion in acute myeloid leukemia by synthesizing ligands for the glyco-immune checkpoint receptor Siglec-9","Leukemia","39(2), 346–359","https://doi.org/10.1038/s41375-024-02454-w"],
- ["lab",2024,"Natalie Stewart, John Daly, Olivia Drummond-Guy, Vignesh Krishnamoorthy, Jessica C. Stark, Nicholas M. Riley, Karla C. Williams, Carolyn R. Bertozzi, Simon P. Wisnovsky","The glyco-immune checkpoint receptor Siglec-7 interacts with T-cell ligands and regulates T-cell activation","Journal of Biological Chemistry","300(2), 105579","https://doi.org/10.1016/j.jbc.2023.105579"],
- ["lab",2023,"Vignesh Krishnamoorthy, John Daly, Simon Wisnovsky","Identifying Genetic Regulators of Protein-Glycan Interactions with Genome-Wide CRISPR Screening","Current Protocols in Chemical Biology","e646","https://doi.org/10.1002/cpz1.646"],
- ["lab",2022,"Natalie Stewart, Simon Wisnovsky","Bridging Glycomics and Genomics: New Uses of Functional Genetics in the Study of Cellular Glycosylation","Frontiers in Molecular Biosciences","9, 934584","https://doi.org/10.3389/fmolb.2022.934584"],
- ["lab",2022,"Simon Wisnovsky, Carolyn R. Bertozzi","Reading the Glyco-Code: Cell-Based Approaches to Studying Protein-Carbohydrate Interactions","Current Opinion in Structural Biology","75, 102395","https://doi.org/10.1016/j.sbi.2022.102395"],
- ["pre",2026,"Jimmy Kim, Halen Kovacs, Anjali Parthasarathy, Shini Chen, Vignesh Krishnamoorthy, Mohammed Al-Seragi, May Zhao, Yu-Hsuan Huang, Pamela Austin Dean, Pauline Johnson, Calvin D. Roskelley, Simon Wisnovsky","A genome-wide CRISPR screen reveals cancer-specific regulators of hyaluronan binding and cellular invasion","bioRxiv","","https://doi.org/10.64898/2026.02.06.704476"],
- ["postdoc",2023,"Green Ahn, Roarke Kamber, Simon Wisnovsky, Nicholas M. Riley, Michael C. Bassik, Steven M. Banik, Carolyn R. Bertozzi","Cellular determinants of targeted membrane protein degradation by lysosome targeting chimeras","Science","382, 6668","https://doi.org/10.1126/science.adf6249"],
- ["postdoc",2023,"Kayvon Pedram, D. Judy Shon, Gabby S. Tender, Angel Kuo, Simon Wisnovsky, Giovanni C. Forcina, Stacy A. Malaker, Davey Huang, Carolyn R. Bertozzi","Design of a mucin-selective protease for targeted degradation of cancer-associated mucins","Nature Biotechnology","","https://doi.org/10.1038/s41587-023-01840-6"],
- ["postdoc",2021,"Simon Wisnovsky, Leonhard Moeckl, Stacy A. Malaker, Kayvon Pedram, Nick Riley, Gaelen Hess, Melissa A. Gray, Benjamin A.H. Smith, Michael Bassik, W.E. Moerner, Carolyn R. Bertozzi","Genome-Wide CRISPR Screens Reveal a Specific Ligand for the Glycan-Binding Immune Checkpoint Receptor Siglec-7","PNAS","118, e2015024118","https://doi.org/10.1073/pnas.2015024118"],
- ["postdoc",2020,"Marjoke F. Debets, Omur Y. Tastan, Simon Wisnovsky, Stacy A. Malaker, Nikolaos Angelis, Leonhard K. R. Moeckl, Junwon Choi, Helen Flynn, Lauren J. S. Wagner, Ganka Bineva Todd, Holly L. Douglas, Aristotelis Antononopoulos, Anna Cioce, William J. Browne, Zhen Li, David C. Briggs, Gaelen T. Hess, Anthony J. Agbay, Chloe Roustan, Stuart Haslam, Ambrosius P. Snijders, Michael C. Bassik, William E. Moerner, Vivian S. W. Li, Carolyn R. Bertozzi, Benjamin Schumann","Metabolic precision labeling enables selective probing of O-linked N-acetylgalactosamine glycosylation","PNAS","117, 25293–25301","https://doi.org/10.1073/pnas.2007297117"],
- ["postdoc",2020,"Benjamin Schumann, Stacy A. Malaker, Simon Wisnovsky, Marjoke F. Debets, Anthony J. Agbay, Daniel Fernandez, Lauren J. S. Wagner, Liang Lin, Zhen Li, Junwon Choi, Douglas M. Fox, Jessie M. Peh, Melissa A. Gray, Kayvon Pedram, Jennifer J. Kohler, Milan Mrksich, Carolyn R. Bertozzi","Bump-and-Hole Engineering Identifies Specific Substrates of Glycosyltransferases in Living Cells","Molecular Cell","78, 824–834","https://doi.org/10.1016/j.molcel.2020.03.030"],
- ["postdoc",2020,"Steven M. Banik, Kayvon Pedram, Simon Wisnovsky, Green Ahn, Nicholas M. Riley, Carolyn R. Bertozzi","Lysosome Targeting Chimeras (LYTACs) for the Degradation of Secreted and Membrane Proteins","Nature","584, 291–297","https://doi.org/10.1038/s41586-020-2545-9"],
- ["phd",2018,"Simon Wisnovsky, Tanja Sack, David Pagliarini, Rebecca Laposa, Shana O. Kelley","DNA Polymerase θ Increases Mutational Rates in Mitochondrial DNA","ACS Chemical Biology","13, 900–908","https://doi.org/10.1021/acschembio.8b00072"],
- ["phd",2017,"Roxana Alta, Hector Vitorino, Dibakar Goswami, Cleber Liria, Simon Wisnovsky, Shana O. Kelley, M. Teresa Machini, Bruno P. Esposito","Mitochondria-Penetrating Peptides Conjugated to Desferrioxamine as Chelators for Mitochondrial Labile Iron","PLoS One","12, e0171729","https://doi.org/10.1371/journal.pone.0171729"],
- ["phd",2016,"Simon Wisnovsky, Sae Rin Jean, Sanduni Liyanage, Aaron Schimmer, Shana O. Kelley","Mitochondrial DNA Repair and Replication Proteins Revealed by Targeted Chemical Probes","Nature Chemical Biology","12, 567–573","https://doi.org/10.1038/nchembio.2102"],
- ["phd",2016,"Simon Wisnovsky, Eric Lei, Sae Rin Jean, Shana O. Kelley","Mitochondrial Chemical Biology: New Probes Elucidate the Secrets of the Powerhouse of the Cell","Cell Chemical Biology","23, 917–927","https://doi.org/10.1016/j.chembiol.2016.06.012"],
- ["phd",2016,"Sae Rin Jean, Marya Ahmed, Eric K. Lei, Simon Wisnovsky, Shana O. Kelley","Peptide-mediated Delivery of Probes and Therapeutics to Mitochondria","Accounts of Chemical Research","49, 1893–1902","https://doi.org/10.1021/acs.accounts.6b00277"],
- ["phd",2014,"Sae Rin Jean, David V. Tulumello, Simon Wisnovsky, Eric K. Lei, Mark P. Pereira, Shana O. Kelley","Molecular Vehicles for Mitochondrial Chemical Biology and Drug Delivery","ACS Chemical Biology","9, 323–333","https://doi.org/10.1021/cb400821p"],
- ["phd",2013,"Simon Wisnovsky, Justin Wilson, Robert Radford, Mark Pereira, Maria Chan, Rebecca Laposa, Stephen Lippard, Shana O. Kelley","Targeting Mitochondrial DNA with a Platinum-Based Anticancer Agent","Cell Chemical Biology","20, 1323–1328","https://doi.org/10.1016/j.chembiol.2013.08.010"],
- ["phd",2013,"Rida Mourtada, Sonali Fonseca, Simon Wisnovsky, Mark Pereira, Xiaoming Wang, Rose Hurren, Jeremy Parfitt, Lesley Larsen, Robin Smith, Michael Murphy, Aaron Schimmer, Shana O. Kelley","Re-Directing an Alkylating Agent to Mitochondria Alters Drug Target and Cell Death Mechanism","PLoS ONE","9, e60253","https://doi.org/10.1371/journal.pone.0060253"],
- ["phd",2013,"Glen Deleavey, Fillip Frank, Matthew Hassler, Simon Wisnovsky, Bhushan Nagar, Masad Damha","The 5′ Binding MID Domain of Human Argonaute2 Tolerates Chemically Modified Nucleotide Analogues","Nucleic Acid Therapeutics","23, 81–87","https://doi.org/10.1089/nat.2012.0393"]
-];
+const GROUP = {lab:"lab", preprint:"pre", postdoc:"postdoc", phd:"phd"};
+const doiUrl = d => { d = str(d).trim(); return !d ? "" : /^https?:/.test(d) ? d : "https://doi.org/" + d.replace(/^doi:\s*/i, ""); };
+const pubs = LIST("publications")
+  .map(p => [GROUP[p.type] || "lab", str(p.year), str(p.authors), str(p.title), str(p.journal), str(p.details), doiUrl(p.doi)])
+  .sort((a, b) => b[1].localeCompare(a[1]));   // newest year first; same-year papers keep their order in the file
 const groups = {lab:"Lab publications", pre:"Preprints", postdoc:"Postdoctoral publications", phd:"PhD publications"};
-const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => str(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const authors = a => esc(a).replace(PI_RE, "<b>$1</b>");
 const pubItem = (p, cls="pub") => {
   const long = cls === "pub" && p[2].split(",").length > 4;   // phones clamp these to two lines
@@ -842,20 +829,9 @@ document.getElementById("publist").addEventListener("click", e => {
 renderPubs();
 
 const CDN = "images/web/";
-const staff = [
- ["Dr. John Daly","Postdoctoral Fellow","team-dr-john-daly.jpg"],
- ["Dr. Tigist Batu","Postdoctoral Fellow","team-dr-tigist-batu.jpg"],
- ["Jimmy Kim","Research Technician","team-jimmy-kim.jpg"]
-];
-const grad = [
- ["Natalie Stewart","PhD Candidate","team-natalie-stewart.jpg"],
- ["Vignesh Krishnamoorthy","PhD Candidate","team-vignesh-krishnamoorthy.jpg"],
- ["Angeline Wu","PhD Candidate","team-angeline-wu.jpg"],
- ["Lidia Piatnitca","PhD Candidate","team-lidia-piatnica.jpg"],
- ["Halen Kovacs","PhD Candidate","team-halen-kovacs.jpg"],
- ["Anjali Parthasarathy","MSc Student","team-anjali-parthasarathy.jpg"],
- ["Andrew Huang","MSc Student","team-andrew-huang.jpg"]
-];
+const member = m => [str(m.name), str(m.role), str(m.photo)];
+const staff = LIST("staff").map(member);
+const grad = LIST("students").map(member);
 const card = m => `<li><img loading="lazy" src="${CDN}${m[2]}" alt="Portrait of ${esc(m[0])}"><span class="n">${esc(m[0])}</span><span class="r">${esc(m[1])}</span></li>`;
 /* team photos are fetched in the background once the first page has finished loading,
    so they show instantly when People opens without slowing the first screen */
@@ -870,15 +846,7 @@ function renderPeople(){
   document.getElementById("m-grad").innerHTML = grad.map(card).join("");
 }
 
-const alumni = [
- ["Olivia Drummond-Guy","MSc, 2024","PhD, Medical Biophysics, University of Toronto"],
- ["Annabel Chen","Co-op research technician, 2023–2024","MSc, NYU"],
- ["Sophia Mair","Visiting international research student, 2023–2024","Technical Author, Bachem"],
- ["May Zhao","Co-op research technician, 2022","Optometry Program, University of Waterloo"],
- ["Cassie Huang","Research Technician, 2025–2026","MD Program, University of British Columbia"],
- ["Mohammed Al-Seragi","Co-op research technician, 2025–2026","MD Program, University of British Columbia"],
- ["Lucie Wang","Co-op research technician, 2025–2026","BSc, UBC"]
-];
+const alumni = LIST("alumni").map(a => [str(a.name), str(a.inLab), str(a.nowAt)]);
 /* most recent first: sorted by the last year in "In the lab", then the first; entries without a year go last */
 const alumniYears = a => (a[1].match(/\b(19|20)\d{2}\b/g) || []).map(Number);
 alumni.sort((a, b) => {
@@ -887,26 +855,12 @@ alumni.sort((a, b) => {
 });
 document.getElementById("alumni").innerHTML = alumni.map(a=>`<tr><td>${esc(a[0])}</td><td>${esc(a[1])}</td><td>${esc(a[2])}</td></tr>`).join("");
 
-/* ---------- news ----------
-   To post an update, add one entry. Order doesn't matter; newest shows first.
-   d: "YYYY-MM" (or just "YYYY")   k: paper | milestone | award | event
-   t: headline   b: one or two sentences   link/go: optional link + its label
-   img: optional photo in images/web/ (card thumbnail + top of the post page)   label: overrides the tag text (e.g. "Preprint")
-   body: optional ["paragraph", "paragraph", ...] for the post page; without it the page shows b
-   slug: optional page address (#/news/slug); made from the headline when left out
-   example: true marks a placeholder; delete those once real posts are in. */
-const news = [
- {d:"2026-10", k:"milestone", example:true, t:"PhD candidate passes comprehensive exam", b:"Placeholder showing how comps, defences and graduations appear. Replace it with a real update or delete it."},
- {d:"2026-08", k:"paper", t:"Lectin-based magnetic CRISPR screens, out in Cell Reports Methods", b:"Jimmy Kim and Halen Kovacs report a rapid way to discover regulators of cell-surface glycosylation using a lectin-based magnetic CRISPR screen.", link:"#/publications", go:"See the paper"},
- {d:"2026-04", k:"paper", t:"Mapping cancer glycome remodeling with CRISPRa, in Cell Genomics", b:"Led by John Daly with Lidia Piatnitca, Mohammed Al-Seragi and Vignesh Krishnamoorthy, CRISPR activation screens chart the genomic landscape of glycome remodeling in cancer.", link:"#/publications", go:"See the paper"},
- {d:"2026-02", k:"paper", label:"Preprint", t:"New preprint: cancer-specific regulators of hyaluronan binding", b:"A genome-wide CRISPR screen led by Jimmy Kim and Halen Kovacs reveals regulators of hyaluronan binding and cellular invasion in cancer cells.", link:"https://doi.org/10.64898/2026.02.06.704476", go:"Read on bioRxiv"},
- {d:"2025-10", k:"event", example:true, t:"Lab members present at a glycobiology conference", b:"Placeholder for talks, posters and conference trips. Replace it with a real update or delete it."},
- {d:"2025-02", k:"paper", t:"ST3GAL4 drives immune evasion in AML, in Leukemia", b:"Vignesh Krishnamoorthy and colleagues show that the glycosyltransferase ST3GAL4 helps leukemia cells evade the immune system by building ligands for the checkpoint receptor Siglec-9.", link:"#/publications", go:"See the paper"},
- {d:"2025", k:"paper", t:"Polysialic acid restrains anticancer immunity, in Frontiers in Oncology", b:"Olivia Drummond-Guy and colleagues find that polysialic acid is upregulated on activated immune cells and negatively regulates anticancer immune activity.", link:"#/publications", go:"See the paper"},
- {d:"2024", k:"milestone", t:"Olivia Drummond-Guy completes MSc", b:"Olivia has moved on to a PhD in Medical Biophysics at the University of Toronto. Congratulations!"},
- {d:"2024-02", k:"paper", t:"Siglec-7 engages T-cell ligands, in the Journal of Biological Chemistry", b:"Natalie Stewart and colleagues show that the glyco-immune checkpoint receptor Siglec-7 interacts with T-cell ligands and regulates T-cell activation.", link:"#/publications", go:"See the paper"},
- {d:"2021-07", k:"milestone", t:"The Wisnovsky Lab opens at UBC", b:"Simon Wisnovsky starts the lab in the Faculty of Pharmaceutical Sciences at the University of British Columbia."}
-].sort((a,b) => b.d.localeCompare(a.d));
+/* ---------- news (entries live in content/news.js) ---------- */
+const news = LIST("news").map(n => ({
+  d: str(n.date), k: ["paper","milestone","award","event"].includes(n.type) ? n.type : "milestone",
+  t: str(n.title), b: str(n.summary), body: Array.isArray(n.body) ? n.body.map(str) : n.body ? [str(n.body)] : null,
+  link: str(n.link), go: n.linkText, img: str(n.photo), alt: n.photoAlt, label: n.label, slug: n.slug, example: !!n.example
+})).sort((a,b) => b.d.localeCompare(a.d));
 const slugify = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 news.forEach(n => {   // every post gets a unique address, #/news/<slug>
   let s = n.slug || slugify(n.t), i = 2;
@@ -933,7 +887,7 @@ function renderNews(kind){
     ? `<ul class="ncards">` + items.map(n => `<li class="ncard" data-k="${n.k}">${thumb(n)}<div class="body">${tag(n)}
         <h2><a href="#/news/${n.slug}">${esc(n.t)}</a></h2>${n.b ? `<p>${esc(n.b)}</p>` : ""}
         <time datetime="${n.d}">${when(n.d)}</time></div></li>`).join("") + `</ul>`
-    : `<p class="empty">No ${KINDS[kind][0].toLowerCase()} posts yet.</p>`;
+    : `<p class="empty">No ${kind === "all" ? "" : KINDS[kind][0].toLowerCase() + " "}posts yet.</p>`;
 }
 /* one post on its own page; returns the post, or null if the address matches none */
 function renderPost(slug){
@@ -958,16 +912,8 @@ document.querySelectorAll(".seg button[data-n]").forEach(b => b.addEventListener
 }));
 renderNews("all");
 
-/* Lab-life photos: put the full-size file in images/events/, a web copy in images/web/, then set src.
-   Entries with an empty src show as "Add photo" placeholders. */
-const photos = [
- {src:"", n:"Lab retreat", d:""},
- {src:"", n:"Holiday party", d:""},
- {src:"", n:"Conference trip", d:""},
- {src:"", n:"Defence celebration", d:""},
- {src:"", n:"Summer students", d:""},
- {src:"", n:"Lab lunch", d:""}
-];
+/* Lab-life photos (entries live in content/photos.js); an empty photo shows an "Add photo" placeholder */
+const photos = LIST("photos").map(p => ({src: str(p.photo), n: str(p.caption), d: str(p.date), alt: p.alt}));
 document.getElementById("gallery").innerHTML = photos.map((p,i) => `<li><figure class="shot">${p.src
     ? `<button data-shot="${i}" aria-label="View photo: ${esc(p.n)}"><img loading="lazy" src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}"></button>`
     : `<div class="ph"><svg aria-hidden="true"><use href="#cam"/></svg><span class="ph-label">Add photo</span></div>`}

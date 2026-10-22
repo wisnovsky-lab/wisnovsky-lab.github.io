@@ -1,0 +1,15 @@
+# Runs tools/check-content.js on every change, so typos in content/ get flagged
+# (red ✗ next to the commit, plus an email to whoever made it).
+name: Check content
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/check-content.js

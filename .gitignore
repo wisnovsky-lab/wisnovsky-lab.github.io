@@ -1,0 +1,7 @@
+# Only the site ships: index.html, images/web/, images/favicon.svg
+images/*
+!images/web/
+!images/favicon.svg
+old versions/
+.impeccable/
+.DS_Store

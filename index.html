@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Wisnovsky Lab</title>
+<meta name="description" content="The Wisnovsky Lab is a chemical biology and functional genomics laboratory in the Faculty of Pharmaceutical Sciences at the University of British Columbia, Vancouver.">
+<link rel="icon" href="images/web/favicon.png" sizes="64x64" type="image/png">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="images/web/apple-touch-icon.png">
+<!-- link previews; the absolute URLs assume the site is published at www.wisnovskylab.ca -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wisnovsky Lab">
+<meta property="og:title" content="Wisnovsky Lab: functional glyco-genomics at UBC">
+<meta property="og:description" content="The Wisnovsky Lab is a chemical biology and functional genomics laboratory in the Faculty of Pharmaceutical Sciences at the University of British Columbia, Vancouver.">
+<meta property="og:url" content="https://www.wisnovskylab.ca/">
+<meta property="og:image" content="https://www.wisnovskylab.ca/images/web/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Diagram of glycans attached to proteins and lipids at the cell surface, drawn with standard glycan symbols">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Wisnovsky_Lab">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f1a26;          /* primary text */
+    --ink-2:#3f4a56;        /* secondary text (≈9:1 on white) */
+    --ink-3:#5f6a75;        /* metadata (≈5.6:1 on white) */
+    --line:#e3e6e9;
+    --line-strong:#868f98;  /* control outlines: 3.3:1 on white, 3:1 on --wash */
+    --wash:#f5f6f7;
+    --ubc:#002145;          /* UBC navy */
+    --link:#0055b7;         /* UBC blue */
+    /* SNFG glycan symbol colours — the signature detail */
+    --glcnac:#0072bc; --gal:#ffd400; --neu5ac:#a54399; --man:#00a651;
+    --max:1180px;
+    --hdr:76px;             /* header height; sticky bars sit just below it */
+    --gutter:clamp(16px,4vw,40px);
+    --font:"Atkinson Hyperlegible Next","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /* type scale: each step at least 1.25x the one below (body = 1rem) */
+    --fs-meta:.875rem;
+    --fs-h3:1.3rem;
+    --fs-group:1.65rem;     /* list-group headings: publication years, team groups */
+    --fs-h2:clamp(1.75rem,2.8vw,2.3rem);
+    --fs-h1:clamp(2.6rem,6vw,4.4rem);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;font-size:106.25%;overflow-x:clip}   /* 17px base on larger screens; never scroll sideways */
+  body{margin:0;background:#fff;color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.6;
+       -webkit-font-smoothing:antialiased;overflow-wrap:break-word;-webkit-tap-highlight-color:transparent}
+  .skip{position:absolute;left:var(--gutter);top:-60px;z-index:50;background:var(--ubc);color:#fff;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:500}
+  .skip:focus{top:12px}
+  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  [data-page] h1:focus,main:focus{outline:none}
+  ::selection{background:#d6e4f5;color:var(--ubc)}
+  img{max-width:100%;height:auto;display:block;background:var(--wash)}
+  a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:.2em}
+  a:hover{text-decoration-thickness:2px}
+  :focus-visible{outline:2px solid var(--link);outline-offset:3px;border-radius:2px}
+  h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.15;margin:0;text-wrap:balance}
+  h1{font-size:var(--fs-h1);letter-spacing:-.02em;line-height:1.05}
+  h2{font-size:var(--fs-h2)}
+  h3{font-size:var(--fs-h3);line-height:1.25}
+  p{margin:0 0 1em;max-width:68ch}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+  .lead{font-size:1.2rem;line-height:1.55;color:var(--ink-2);max-width:60ch}
+  .meta{color:var(--ink-3);font-size:var(--fs-meta)}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ---------- header ---------- */
+  header.site{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(8px);
+              border-bottom:1px solid transparent;transition:border-color .2s}
+  header.site.scrolled{border-bottom-color:var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:24px;height:var(--hdr)}
+  .brand{display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none;font-weight:500;font-size:1.3rem;letter-spacing:-.02em}
+  .brand img{width:auto;height:34px;background:none}   /* UBC crest; clear space >= half its width */
+  nav.main{display:flex;gap:4px}
+  nav.main a{color:var(--ink-2);text-decoration:none;font-size:.97rem;padding:8px 12px;border-radius:6px;position:relative}
+  nav.main a:hover{color:var(--ink);background:var(--wash)}
+  nav.main a[aria-current="page"]{color:var(--ubc);font-weight:500}
+  nav.main a[aria-current="page"]::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;background:var(--ubc);border-radius:1px}
+  .social{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;color:var(--ink-2)}
+  .social:hover{background:var(--wash);color:var(--ink)}
+  .social svg{width:18px;height:18px}
+
+  /* phone menu: a modal <dialog> so focus stays inside it and the page behind is inert */
+  .menu-btn{display:none;width:48px;height:48px;margin-right:-12px;border:0;background:none;color:var(--ink);place-items:center;border-radius:12px;cursor:pointer}
+  .menu-btn svg,.sheet .close svg{width:22px;height:22px}
+  dialog.sheet{position:fixed;inset:0;width:100%;max-width:none;height:100%;max-height:none;margin:0;border:0;padding:0 var(--gutter) calc(24px + env(safe-area-inset-bottom,0px));
+               background:#fff;color:var(--ink);flex-direction:column}
+  dialog.sheet[open]{display:flex;animation:sheet .35s cubic-bezier(.16,1,.3,1)}
+  dialog.sheet::backdrop{background:transparent}
+  @keyframes sheet{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  .sheet .bar{height:60px;padding:0}
+  .sheet .close{width:48px;height:48px;margin-right:-12px;border:0;background:none;color:var(--ink);display:grid;place-items:center;border-radius:12px;cursor:pointer}
+  .sheet nav a{display:flex;align-items:center;justify-content:space-between;min-height:64px;border-bottom:1px solid var(--line);
+               color:var(--ink);text-decoration:none;font-size:26px;font-weight:500;letter-spacing:-.025em}
+  .sheet nav a[aria-current="page"]{color:var(--ubc)}
+  .sheet nav a[aria-current="page"]::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--ubc)}
+  .sheet-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:24px}
+  .sheet-foot .btn{justify-content:center;min-height:52px}
+
+  main{min-height:70vh}
+  section.block{padding:clamp(56px,8vw,104px) 0}
+  section.block + section.block{padding-top:0}
+  section.block + section.block.band{padding-top:clamp(56px,8vw,104px)}   /* tinted band keeps its inner padding */
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:36px}
+  .more{font-size:.95rem;text-decoration:none;font-weight:600;white-space:nowrap}
+  .more:hover{text-decoration:underline}
+  .ext{width:.8em;height:.8em;margin-left:3px;vertical-align:-.05em}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-weight:500;font-size:.97rem;text-decoration:none;
+       transition:background .2s, color .2s, box-shadow .2s}
+  .btn.primary{background:var(--ubc);color:#fff}
+  .btn.primary:hover{background:#0a3266;box-shadow:0 6px 18px -8px rgba(15,26,38,.35)}
+  .btn.ghost{color:var(--ubc);box-shadow:inset 0 0 0 1px var(--line-strong)}
+  .btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--ubc)}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+
+  /* glycan glyphs */
+  .glyph{width:18px;height:18px;flex:none}
+
+  /* ---------- home ---------- */
+  .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(32px,6vw,80px);align-items:center;padding:clamp(40px,6vw,80px) 0 clamp(8px,2vw,24px)}
+  .hero h1{margin-bottom:28px}
+  .hero .where{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:36px;color:var(--ink-3);font-size:.9rem}
+  .hero figure{margin:0}
+  .hero img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px}
+  .hero figcaption{margin-top:10px}
+
+  .themes{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .themes li{display:grid;grid-template-columns:28px 1fr 280px;gap:24px;align-items:start;padding:28px 0;border-bottom:1px solid var(--line)}
+  .themes h3{margin-bottom:6px}
+  .themes h3 a{color:var(--ink);text-decoration:none}
+  .themes li:hover h3 a{color:var(--ubc);text-decoration:underline;text-decoration-thickness:1px}
+  .themes p{color:var(--ink-2);margin:0}
+  .themes img{width:280px;padding:8px;background:#fff;border-radius:3px;border:1px solid var(--line)}   /* wide diagrams at their natural shape, never cropped */
+  .themes .glyph{align-self:start;margin-top:5px}
+
+  .pubs-recent{list-style:none;margin:0;padding:0}
+  .pubs-recent li{display:grid;grid-template-columns:72px 1fr;gap:20px;padding:20px 0;border-top:1px solid var(--line)}
+  .pubs-recent li:last-child{border-bottom:1px solid var(--line)}
+
+  .band{background:var(--wash)}
+  .band .inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+
+  /* ---------- page head ---------- */
+  .page-head{padding:clamp(48px,7vw,88px) 0 clamp(32px,4vw,48px)}
+  .page-head h1{margin-bottom:20px}
+
+  /* ---------- research ---------- */
+  .wide-fig{margin:0 0 clamp(48px,6vw,80px)}
+  .wide-fig img{width:100%;border:1px solid var(--line);border-radius:4px;background:#fff}
+  .wide-fig figcaption{margin-top:10px}
+  .research-grid{display:grid;grid-template-columns:220px 1fr;gap:clamp(32px,5vw,72px);padding-bottom:clamp(56px,8vw,104px)}
+  .toc{position:sticky;top:100px;align-self:start}
+  .toc p{font-size:.85rem;color:var(--ink-3);margin-bottom:12px}
+  .toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+  .toc a{display:flex;gap:10px;align-items:flex-start;padding:8px 0 8px 16px;margin-left:-1px;border-left:2px solid transparent;color:var(--ink-2);text-decoration:none;font-size:.93rem;line-height:1.4}
+  .toc a:hover{color:var(--ink)}
+  .toc a.on{border-left-color:var(--ubc);color:var(--ubc);font-weight:500}
+  .toc .glyph{width:14px;height:14px;margin-top:2px}
+  .theme{scroll-margin-top:100px;margin-bottom:clamp(72px,9vw,120px)}
+  .theme:last-child{margin-bottom:0}
+  .theme h2{display:flex;gap:14px;align-items:baseline;margin-bottom:20px}
+  .theme h2 .glyph{transform:translateY(2px)}
+  .theme figure{margin:28px 0 0}
+  .theme img{width:100%;max-width:760px;border:1px solid var(--line);border-radius:4px;background:#fff}
+
+  /* ---------- publications ---------- */
+  .pub-tools{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);position:sticky;top:76px;background:#fff;z-index:5}
+  .seg{display:flex;flex-wrap:wrap;gap:6px}
+  .seg button{font:inherit;font-size:.9rem;border:0;background:none;color:var(--ink-2);padding:7px 14px;border-radius:999px;cursor:pointer;box-shadow:inset 0 0 0 1px var(--line-strong)}
+  .seg button:hover{color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink-3)}
+  .seg button[aria-pressed="true"]{background:var(--ubc);color:#fff;box-shadow:none}
+  .search{position:relative}
+  .search input{font:inherit;font-size:.93rem;width:min(280px,80vw);padding:9px 14px 9px 36px;border:1px solid var(--line-strong);border-radius:999px;color:var(--ink);caret-color:var(--ubc)}
+  .search input:focus{outline:none;border-color:var(--link);box-shadow:0 0 0 3px #d6e4f5}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-3)}
+  .pub-group{padding-top:48px}
+  .pub-group h2{font-size:var(--fs-group);margin-bottom:8px;display:flex;align-items:baseline;gap:10px}
+  .pub-group h2 .count{font-size:.9rem;color:var(--ink-3);font-weight:400;letter-spacing:0}
+  .pub-list{list-style:none;margin:0;padding:0}
+  .pub{display:grid;grid-template-columns:72px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+  /* shared by the Publications list and the home page's Recent publications */
+  :is(.pub,.pubs-recent li) .yr{font-variant-numeric:tabular-nums;color:var(--ink-3);padding-top:1px}
+  :is(.pub,.pubs-recent li) .t{font-weight:500;display:block;margin-bottom:4px;max-width:70ch}
+  :is(.pub,.pubs-recent li) .a{color:var(--ink-2);font-size:.93rem;display:block;max-width:80ch}
+  :is(.pub,.pubs-recent li) .a b{color:var(--ink);font-weight:600}
+  :is(.pub,.pubs-recent li) .j{font-size:.93rem;color:var(--ink-3)}
+  :is(.pub,.pubs-recent li) .j i{color:var(--ink-2)}
+  :is(.pub,.pubs-recent li) .doi{font-size:.88rem;font-weight:600;margin-left:8px;white-space:nowrap}
+  .pub .toggle{display:none;border:0;background:none;padding:0;color:var(--link);font:inherit;font-size:.85rem;font-weight:500;cursor:pointer;min-height:40px}
+  .empty{padding:48px 0;color:var(--ink-3)}
+
+  /* ---------- people ---------- */
+  .pi{display:grid;grid-template-columns:320px 1fr;gap:clamp(32px,5vw,64px);align-items:start;scroll-margin-top:100px}
+  .pi img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px}
+  .pi h2{margin-bottom:4px}
+  .pi .role{color:var(--ink-3);margin-bottom:24px}
+  .pi .role span{display:block}
+  .timeline{list-style:none;margin:28px 0 0;padding:0;border-top:1px solid var(--line)}
+  .timeline li{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+  .timeline .when{color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .group-label{font-size:var(--fs-group);margin:0 0 24px}
+  .members{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:40px 24px;list-style:none;margin:0 0 64px;padding:0}
+  .members img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px;margin-bottom:14px;filter:saturate(.92);transition:filter .3s}
+  .members li:hover img{filter:saturate(1.05)}
+  .members .n{font-weight:500;display:block}
+  .members .r{color:var(--ink-3);font-size:.92rem}
+  table.alumni{width:100%;border-collapse:collapse;font-size:.95rem}
+  .alumni th{text-align:left;font-weight:500;color:var(--ink-3);font-size:.85rem;padding:0 16px 10px 0;border-bottom:1px solid var(--line)}
+  .alumni td{padding:14px 16px 14px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  .alumni td:first-child{font-weight:500}
+  .alumni td:nth-child(2){color:var(--ink-2)}
+
+  /* ---------- join ---------- */
+  .join-grid{display:grid;grid-template-columns:1fr 300px;gap:clamp(32px,5vw,72px);align-items:start;padding-bottom:clamp(56px,8vw,104px)}
+  .paths{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .paths li{display:grid;grid-template-columns:28px 1fr;gap:16px;padding:32px 0;border-bottom:1px solid var(--line)}
+  .paths h2{font-size:var(--fs-h3);margin-bottom:12px}
+  .paths p{color:var(--ink-2);margin-bottom:12px}
+  .contact-card{position:sticky;top:100px;padding:28px;background:var(--wash);border-radius:6px}
+  .contact-card h3{margin-bottom:10px}
+  .contact-card p{color:var(--ink-2);font-size:.95rem}
+  .edi{margin-top:40px;color:var(--ink-2)}
+
+  /* ---------- news ---------- */
+  .tag{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-meta);font-weight:600;color:var(--ink-3)}
+  .tag .glyph{width:12px;height:12px}
+  .tag .ex{font-size:.75rem;color:var(--ubc);background:#e6edf6;padding:1px 8px;border-radius:999px}
+  .news-tools{padding:16px 0;border-bottom:1px solid var(--line)}
+  /* news cards: the title link stretches over the whole card */
+  #newslist{padding-bottom:clamp(56px,8vw,104px)}   /* space before the footer */
+  .ncards{list-style:none;margin:0;padding:40px 0 0;display:grid;gap:24px}
+  .ncard{position:relative;display:grid;grid-template-columns:240px 1fr;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;transition:border-color .2s,box-shadow .2s}
+  .ncard:hover{border-color:var(--line-strong);box-shadow:0 12px 28px -20px rgba(15,26,38,.5)}
+  .ncard:focus-within{outline:2px solid var(--link);outline-offset:3px}
+  .ncard .thumb{width:100%;height:100%;min-height:190px;object-fit:cover;border-radius:0}
+  .thumb-art{display:grid;place-items:center;background-color:var(--tint,var(--wash));background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg opacity='.22' stroke='%230f1a26' stroke-width='.8'%3E%3Crect x='8' y='8' width='10' height='10' fill='%230072bc'/%3E%3Ccircle cx='49' cy='13' r='5' fill='%23ffd400'/%3E%3Cpath d='M13 41l6 6-6 6-6-6z' fill='%23a54399'/%3E%3Ccircle cx='49' cy='49' r='5' fill='%2300a651'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px}
+  .thumb-art svg{width:76px;height:76px;padding:14px;background:#fff;border-radius:14px;box-shadow:0 0 0 1px var(--line),0 8px 20px -14px rgba(15,26,38,.45)}
+  .ncard .body{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:24px 28px;min-width:0}
+  .ncard h2{margin:4px 0 0;max-width:60ch;font-size:var(--fs-h3);line-height:1.25}
+  .ncard h2 a{color:var(--ink);text-decoration:none}
+  .ncard h2 a::after{content:"";position:absolute;inset:0}
+  .ncard h2 a:focus-visible{outline:none}
+  .ncard:hover h2 a{color:var(--ubc);text-decoration:underline;text-decoration-thickness:1px}
+  .ncard p{margin:0;color:var(--ink-2);max-width:70ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ncard time{margin-top:auto;padding-top:4px;color:var(--ink-3);font-size:var(--fs-meta);font-variant-numeric:tabular-nums}
+
+  /* single news post */
+  .article{max-width:760px;padding:clamp(32px,5vw,56px) 0 clamp(56px,8vw,104px)}
+  .article .back{font-size:.95rem;font-weight:600;text-decoration:none}
+  .article .back:hover{text-decoration:underline}
+  .article .meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:32px 0 18px}
+  .article .meta-row time{color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .article h1{font-size:clamp(2rem,4.4vw,3.1rem);line-height:1.1;margin-bottom:28px;text-wrap:pretty}
+  .article .hero-img{width:100%;border-radius:6px;margin:0 0 32px}
+  .article .text p{font-size:1.1rem;line-height:1.65;color:var(--ink-2);max-width:68ch}
+  .article .actions{margin-top:28px}
+  .related{margin-top:72px;padding-top:40px;border-top:1px solid var(--line)}
+  .related h2{font-size:var(--fs-h3);margin-bottom:24px}
+  .related ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:28px}
+  .related li a{display:block;margin:10px 0 6px;color:var(--ink);font-weight:600;line-height:1.3;text-decoration:none}
+  .related li a:hover{color:var(--ubc);text-decoration:underline}
+  .related time{color:var(--ink-3);font-size:var(--fs-meta)}
+  .news-mini li{grid-template-columns:96px 1fr}
+  .news-mini .tag{display:inline-flex;margin-bottom:10px}
+  .news-mini a.t{display:block}
+  .news-mini a.t{color:var(--ink);text-decoration:none}
+  .news-mini a.t:hover{color:var(--ubc);text-decoration:underline}
+
+  .life{margin:0 0 64px;scroll-margin-top:calc(var(--hdr) + 24px)}
+  .life .section-head{margin-bottom:24px}
+  .life .group-label{margin:0}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 24px;list-style:none;margin:0;padding:0}
+  .shot{margin:0}
+  .shot button{all:unset;display:block;width:100%;cursor:zoom-in;border-radius:4px}
+  .shot button:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+  .shot img,.shot .ph{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
+  .shot button:hover img{filter:brightness(1.04)}
+  .shot .ph{display:grid;place-content:center;justify-items:center;gap:8px;background:var(--wash);border:1px dashed #cfd5db;color:var(--ink-3);font-size:.88rem}
+  .shot .ph svg{width:24px;height:24px}
+  .shot figcaption{margin-top:10px}
+  .shot .n{display:block;font-weight:500}
+  .shot .d{color:var(--ink-3);font-size:.9rem}
+  dialog.lightbox{border:0;padding:0;background:none;max-width:min(1100px,92vw);overflow:visible}
+  dialog.lightbox::backdrop{background:rgba(15,26,38,.88)}
+  .lightbox img{max-width:100%;max-height:80vh;width:auto;border-radius:4px;background:none}
+  .lightbox p{color:#fff;margin:12px 0 0}
+  .lightbox .close{position:absolute;top:-48px;right:0;width:40px;height:40px;border:0;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;cursor:pointer}
+
+  /* ---------- footer ---------- */
+  footer.site{border-top:1px solid var(--line);padding:48px 0 40px;margin-top:0;font-size:.93rem;color:var(--ink-2)}
+  .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+  .foot b{display:block;color:var(--ink);font-weight:500;margin-bottom:8px}
+  .foot a{color:var(--ink-2)}
+  .foot a:hover{color:var(--link)}
+  .legal{margin-top:40px;color:var(--ink-3);font-size:.85rem}
+
+
+  /* route visibility + entrance (without JS every page simply shows, one after another) */
+  .js [data-page]{display:none}
+  .js [data-page].active{display:block;animation:in .5s cubic-bezier(.16,1,.3,1)}
+  @keyframes in{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.js [data-page].active,dialog.sheet[open]{animation:none}html{scroll-behavior:auto}}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    .hero,.band .inner,.research-grid,.pi,.join-grid,.foot{grid-template-columns:1fr}
+    .hero img{aspect-ratio:3/2}
+    /* "On this page" becomes a sticky row of chips */
+    .research-grid{gap:0}
+    .research-grid > *{min-width:0}   /* let the chip row scroll inside itself instead of widening the page */
+    .toc{position:sticky;top:var(--hdr);z-index:5;margin:0 calc(var(--gutter) * -1) 32px;padding:10px var(--gutter);background:rgba(255,255,255,.95);
+         backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .toc p{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    .toc ol{display:flex;gap:8px;overflow-x:auto;border:0;scrollbar-width:none}
+    .toc ol::-webkit-scrollbar{display:none}
+    .toc a{flex:none;align-items:center;min-height:40px;margin:0;padding:0 14px;border:0;border-radius:999px;white-space:nowrap;box-shadow:inset 0 0 0 1px var(--line-strong)}
+    .toc a.on{background:var(--ubc);color:#fff;box-shadow:none}
+    .toc .glyph{margin:0}
+    .theme{scroll-margin-top:calc(var(--hdr) + 72px)}
+    .themes li{grid-template-columns:22px 1fr}
+    .themes img{grid-column:2;width:100%;max-width:360px}
+    .pub-tools{top:0;position:static}
+    .pi img{max-width:280px}
+    .contact-card{position:static}
+    .gallery{grid-template-columns:repeat(2,1fr)}
+  }
+  /* phones: header collapses to a menu button, the X link moves into the menu */
+  @media (max-width:760px){
+    :root{--hdr:60px}
+    .bar{gap:12px}
+    .brand{font-size:1.15rem}
+    .brand img{height:30px}
+    nav.main,.bar > .social{display:none}
+    .menu-btn{display:grid}
+    .pub-tools{padding:12px 0}
+  }
+  @media (max-width:560px){
+    html{font-size:100%}   /* 16px base on phones */
+    .pub,.pubs-recent li{grid-template-columns:1fr;gap:4px}
+    .ncard{grid-template-columns:1fr}
+    .ncard .thumb{min-height:0;aspect-ratio:16/9;height:auto}
+    .ncard .body{padding:20px}
+    .gallery{gap:24px 16px}
+    .actions{flex-direction:column;align-items:stretch}
+    .actions .btn{justify-content:center;min-height:52px}
+    .search,.search input{width:100%}
+    /* long author lists collapse to two lines with a toggle */
+    .pub.long .a{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .pub.long.open .a{display:block;-webkit-line-clamp:unset;line-clamp:none;overflow:visible}
+    .pub.long .toggle:not([hidden]){display:inline-flex;align-items:center}
+    footer.site{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+    .timeline li{grid-template-columns:1fr;gap:2px}
+    .members{grid-template-columns:repeat(2,1fr);gap:28px 16px}
+    table.alumni thead{display:none}
+    .alumni tr{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
+    .alumni td{display:block;border:0;padding:2px 0}
+    .section-head{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+  /* touch screens: links and controls get 44px-tall hit areas */
+  @media (pointer:coarse){
+    .more,.article .back,.seg button,.foot a{min-height:44px;display:inline-flex;align-items:center}
+    .seg button{padding:0 16px}
+  }
+
+  /* ============ glycan symbols + SNFG colour wayfinding ============ */
+  :root{
+    --glcnac-tint:#e3f0f9; --neu5ac-tint:#f5e9f4; --gal-tint:#fff5c4; --man-tint:#e0f4e8;
+  }
+  /* each research area / news type carries its sugar's colour */
+  [data-toc="cancer"],[data-k="paper"],[data-n="paper"]{--area:var(--glcnac);--tint:var(--glcnac-tint)}
+  [data-toc="ligands"],[data-k="milestone"],[data-n="milestone"]{--area:var(--neu5ac);--tint:var(--neu5ac-tint)}
+  [data-toc="technology"],[data-k="award"],[data-n="award"]{--area:var(--gal);--tint:var(--gal-tint)}
+  [data-k="event"],[data-n="event"]{--area:var(--man);--tint:var(--man-tint)}
+
+  /* research: larger symbols, "On this page" marks the active area in its colour */
+  .theme h2 .glyph{width:26px;height:26px;transform:translateY(3px)}
+  .themes .glyph{width:22px;height:22px}
+  .toc a.on{border-left-color:var(--area);color:var(--ink)}
+  @media (max-width:900px){
+    .toc a.on{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--area)}
+  }
+
+  /* news: type labels become tinted pills; filters light up in the same colour */
+  .tag[data-k]{padding:3px 11px 3px 9px;border-radius:999px;background:var(--tint);color:var(--ink)}
+  .seg button[data-n]:not([data-n="all"])[aria-pressed="true"]{background:var(--tint);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--area)}
+
+  /* Simon's timeline drawn as a glycan chain: one sugar per step, linked top to bottom */
+  .timeline{border-top:0}
+  .timeline li{position:relative;padding-left:36px;border-bottom:0}
+  .timeline li::before{content:"";position:absolute;left:4px;top:19px;width:14px;height:14px;box-sizing:border-box;border:1px solid var(--ink);z-index:1}
+  .timeline li:not(:last-child)::after{content:"";position:absolute;left:10.5px;top:33px;bottom:-19px;width:1px;background:var(--ink)}
+  .timeline li:nth-child(1)::before{background:var(--neu5ac);transform:rotate(45deg) scale(.85)}
+  .timeline li:nth-child(2)::before{background:var(--gal);border-radius:50%}
+  .timeline li:nth-child(3)::before{background:var(--glcnac)}
+  .timeline li:nth-child(4)::before{background:var(--man);border-radius:50%}
+
+  /* footer signature: a sialylated N-glycan */
+  .glycan-mark{display:block;width:150px;height:auto;margin-bottom:16px}
+
+  /* empty photo tiles: a faint field of SNFG symbols instead of a camera */
+  .shot .ph{border-style:solid;border-color:var(--line);background-color:#fafbfc;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg opacity='.22' stroke='%230f1a26' stroke-width='.8'%3E%3Crect x='8' y='8' width='10' height='10' fill='%230072bc'/%3E%3Ccircle cx='49' cy='13' r='5' fill='%23ffd400'/%3E%3Cpath d='M13 41l6 6-6 6-6-6z' fill='%23a54399'/%3E%3Ccircle cx='49' cy='49' r='5' fill='%2300a651'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:72px 72px}
+  .shot .ph svg{display:none}
+  .shot .ph-label{background:#fff;padding:6px 14px;border-radius:999px;font-weight:600;color:var(--ink-2);box-shadow:0 0 0 1px var(--line)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- SNFG symbols: GlcNAc (blue square), Gal (yellow circle), Neu5Ac (purple diamond), Man (green circle) -->
+  <symbol id="g-sq" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" fill="var(--glcnac)" stroke="#0f1a26" stroke-width="1"/></symbol>
+  <symbol id="g-ci" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="var(--gal)" stroke="#0f1a26" stroke-width="1"/></symbol>
+  <symbol id="g-di" viewBox="0 0 18 18"><path d="M9 1.5 16.5 9 9 16.5 1.5 9Z" fill="var(--neu5ac)" stroke="#0f1a26" stroke-width="1"/></symbol>
+  <symbol id="g-gr" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="var(--man)" stroke="#0f1a26" stroke-width="1"/></symbol>
+  <symbol id="ext" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="cam" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+</svg>
+
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="site" id="top">
+  <div class="wrap bar">
+    <a class="brand" href="#/" aria-label="Wisnovsky Lab home">
+      <img src="images/web/ubc-crest.png" width="99" height="135" alt="">
+      Wisnovsky Lab
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#/research" data-nav="research">Research</a>
+      <a href="#/publications" data-nav="publications">Publications</a>
+      <a href="#/people" data-nav="people">People</a>
+      <a href="#/news" data-nav="news">News</a>
+      <a href="#/join" data-nav="join">Join us</a>
+    </nav>
+    <a class="social" href="https://twitter.com/Wisnovsky_Lab" aria-label="Wisnovsky Lab on X (opens in a new tab)" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.9-6.4L6.3 22H3.2l7.3-8.3L1 2h6.3l4.4 5.9L18.9 2Zm-1.1 18.1h1.7L6.3 3.8H4.5l13.3 16.3Z"/></svg>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-haspopup="dialog" aria-controls="sheet">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<dialog class="sheet" id="sheet" aria-label="Menu">
+  <div class="bar">
+    <a class="brand" href="#/" aria-label="Wisnovsky Lab home"><img src="images/web/ubc-crest.png" width="99" height="135" alt="">Wisnovsky Lab</a>
+    <button class="close" aria-label="Close menu" autofocus>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Main">
+    <a href="#/" data-nav="home">Home</a>
+    <a href="#/research" data-nav="research">Research</a>
+    <a href="#/publications" data-nav="publications">Publications</a>
+    <a href="#/people" data-nav="people">People</a>
+    <a href="#/news" data-nav="news">News</a>
+    <a href="#/join" data-nav="join">Join us</a>
+  </nav>
+  <div class="sheet-foot">
+    <a class="btn primary" href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Email Simon<span class="sr-only"> (opens in a new tab)</span></a>
+    <a class="btn ghost" href="https://twitter.com/Wisnovsky_Lab" target="_blank" rel="noopener">@Wisnovsky_Lab on X<span class="sr-only"> (opens in a new tab)</span></a>
+  </div>
+</dialog>
+
+<p class="sr-only" id="status" role="status" aria-live="polite"></p>
+
+<main id="content" tabindex="-1">
+
+<!-- ================= HOME ================= -->
+<div data-page="home">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Functional glyco-genomics</h1>
+        <p class="lead">The Wisnovsky Lab is a chemical biology and functional genomics laboratory housed in the Faculty of Pharmaceutical Sciences at the University of British Columbia, Vancouver. Our work integrates molecular design, functional genetics, glycobiology and immunology to advance understanding of human disease.</p>
+        <div class="actions">
+          <a class="btn primary" href="#/research">Our research</a>
+          <a class="btn ghost" href="#/join">Join the lab</a>
+        </div>
+        <div class="where"><span>Faculty of Pharmaceutical Sciences</span><span>University of British Columbia</span><span>Vancouver, BC</span></div>
+      </div>
+      <figure>
+        <img src="images/web/pharm-scie.jpg" width="1200" height="905" fetchpriority="high" alt="The UBC Pharmaceutical Sciences building, a stack of glass cubes lit at dusk">
+        <figcaption class="meta">Pharmaceutical Sciences Building, UBC Vancouver</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><h2>Research</h2><a class="more" href="#/research">All research</a></div>
+      <ul class="themes">
+        <li>
+          <svg class="glyph" aria-hidden="true"><use href="#g-sq"/></svg>
+          <div><h3><a href="#/research/cancer">The cancer glyco-genomic code</a></h3>
+          <p>CRISPR KO and CRISPRi screens that map how cancer cells remodel their surface glycans to hide from the immune system.</p></div>
+          <img src="images/web/screening-figure.jpg" width="1600" height="550" loading="lazy" decoding="async" alt="">
+        </li>
+        <li>
+          <svg class="glyph" aria-hidden="true"><use href="#g-di"/></svg>
+          <div><h3><a href="#/research/ligands">Ligands for orphan glycan-binding receptors</a></h3>
+          <p>CRISPRa screening and targeted biochemistry to define the glycoproteins that immune receptors recognise.</p></div>
+          <img src="images/web/ligand-receptor2.jpg" width="1600" height="667" loading="lazy" decoding="async" alt="">
+        </li>
+        <li>
+          <svg class="glyph" aria-hidden="true"><use href="#g-ci"/></svg>
+          <div><h3><a href="#/research/technology">Technologies for glycome-wide screening</a></h3>
+          <p>Pooled, high-throughput CRISPR tools that test glycan function across the cell surface.</p></div>
+          <img src="images/web/glyco-editing.jpg" width="1600" height="355" loading="lazy" decoding="async" alt="">
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><h2>Lab news</h2><a class="more" href="#/news">All news</a></div>
+      <ul class="pubs-recent news-mini" id="news-recent"></ul>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head"><h2>Recent publications</h2><a class="more" href="#/publications">All publications</a></div>
+      <ul class="pubs-recent" id="recent"></ul>
+    </div>
+  </section>
+
+  <section class="block band">
+    <div class="wrap inner">
+      <div>
+        <h2 style="margin-bottom:16px">Join the lab</h2>
+        <p class="lead" style="margin:0">We are actively recruiting creative and motivated researchers to join our group: graduate students, postdocs, research assistants and undergraduates.</p>
+      </div>
+      <div class="actions" style="margin:0">
+        <a class="btn primary" href="#/join">See open positions</a>
+        <a class="btn ghost" href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Email Simon<span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= RESEARCH ================= -->
+<div data-page="research">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Functional glyco-genomics</h1>
+      <p class="lead">All living cells are coated with a dense layer of carbohydrate molecules called <em>glycans</em>. The Wisnovsky lab uses cutting-edge functional genomic screening tools to better define the molecular function of these glycans and identify new therapeutic targets for the treatment of disease.</p>
+    </div>
+    <figure class="wide-fig">
+      <img src="images/web/figure-1-glyco-code.jpg" width="1600" height="764" loading="lazy" decoding="async" alt="Schematic of glycans attached to proteins at the cell surface, drawn with standard glycan symbols">
+      <figcaption class="meta">Glycans decorate proteins and lipids across the cell surface.</figcaption>
+    </figure>
+
+    <div class="research-grid">
+      <aside class="toc" aria-label="On this page">
+        <p>On this page</p>
+        <ol>
+          <li><a href="#/research/cancer" data-toc="cancer"><svg class="glyph" aria-hidden="true"><use href="#g-sq"/></svg>The cancer glyco-genomic code</a></li>
+          <li><a href="#/research/ligands" data-toc="ligands"><svg class="glyph" aria-hidden="true"><use href="#g-di"/></svg>Ligands for orphan receptors</a></li>
+          <li><a href="#/research/technology" data-toc="technology"><svg class="glyph" aria-hidden="true"><use href="#g-ci"/></svg>Glycome-wide screening</a></li>
+        </ol>
+      </aside>
+      <div>
+        <article class="theme" id="cancer">
+          <h2><svg class="glyph" aria-hidden="true"><use href="#g-sq"/></svg>The cancer glyco-genomic code</h2>
+          <p>Cancer cells radically alter their cell surface glycans during tumour development. Cancer-associated glycan structures often act as signals that shut off immune activity, helping cancer cells hide from the immune system.</p>
+          <p>The Wisnovsky lab is using CRISPR knockout (CRISPR KO) and CRISPR interference (CRISPRi) screening techniques to identify the molecular pathways in cancer cells that drive these fundamental changes in cellular glycosylation. We expect our work to identify new cancer-specific vulnerabilities that can be targeted for tumour immunotherapy.</p>
+          <figure><img src="images/web/screening-figure.jpg" width="1600" height="550" loading="lazy" decoding="async" alt="Workflow of a pooled CRISPR screen for regulators of cancer cell glycosylation"></figure>
+        </article>
+        <article class="theme" id="ligands">
+          <h2><svg class="glyph" aria-hidden="true"><use href="#g-di"/></svg>Defining new ligands for orphan glycan-binding receptors</h2>
+          <p>Human immune cells express hundreds of glycan-binding receptors that transmit specific intracellular signals upon binding to specific glycosylated ligands.</p>
+          <p>The Wisnovsky lab uses high-throughput CRISPR activation (CRISPRa) screening, along with an array of targeted biochemical techniques, to define the complex glycoprotein structures that bind to receptors of interest. Understanding these ligand-receptor interactions can help us build new tools and strategies for therapeutically modulating the immune system.</p>
+          <figure><img src="images/web/ligand-receptor2.jpg" width="1600" height="667" loading="lazy" decoding="async" alt="Diagram of an immune-cell glycan-binding receptor engaging a glycoprotein ligand"></figure>
+        </article>
+        <article class="theme" id="technology">
+          <h2><svg class="glyph" aria-hidden="true"><use href="#g-ci"/></svg>New technologies for glycome-wide screening</h2>
+          <p>Hundreds of distinct glycan structures are attached to thousands of different protein scaffolds on the cell surface. The Wisnovsky lab is building new CRISPR-based technologies that will allow us to directly screen the function of these glycans in a pooled, high-throughput manner. We hope these tools will create new opportunities in translational glycoscience.</p>
+          <figure><img src="images/web/glyco-editing.jpg" width="1600" height="355" loading="lazy" decoding="async" alt="Concept figure of CRISPR-based glyco-editing across the cell surface"></figure>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PUBLICATIONS ================= -->
+<div data-page="publications">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Publications</h1>
+      <p class="lead">Papers and preprints from the lab, plus Simon’s postdoctoral and doctoral work.</p>
+    </div>
+    <div class="pub-tools">
+      <div class="seg" role="group" aria-label="Filter publications">
+        <button aria-pressed="true" data-f="all">All</button>
+        <button aria-pressed="false" data-f="lab">Lab</button>
+        <button aria-pressed="false" data-f="pre">Preprints</button>
+        <button aria-pressed="false" data-f="postdoc">Postdoctoral</button>
+        <button aria-pressed="false" data-f="phd">PhD</button>
+      </div>
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Search title, author, journal" aria-label="Search publications">
+      </label>
+    </div>
+    <div id="publist" style="padding-bottom:clamp(56px,8vw,104px)"></div>
+  </div>
+</div>
+
+<!-- ================= PEOPLE ================= -->
+<div data-page="people">
+  <div class="wrap">
+    <div class="page-head"><h1>People</h1></div>
+
+    <div class="pi" id="pi">
+      <img src="images/web/wisnovskyseminarphoto-cropped.jpg" width="900" height="900" loading="lazy" decoding="async" alt="Portrait of Simon Wisnovsky">
+      <div>
+        <h2>Simon Wisnovsky, PhD</h2>
+        <p class="role"><span>Principal Investigator</span><span>Assistant Professor, Faculty of Pharmaceutical Sciences</span></p>
+        <p>Prof. Simon Wisnovsky grew up in Montréal, Quebec and obtained his B. Sc. in Biochemistry from McGill University. He completed his PhD in Prof. Shana Kelley’s lab at the University of Toronto, where he developed new chemical-genetic screening methods to study the cellular DNA damage response.</p>
+        <p>In 2017 Simon joined Prof. Carolyn Bertozzi’s lab at Stanford University as a CIHR Banting Postdoctoral Fellow. There, he applied his expertise in genomic screening to identify ligands for a class of glycan-binding immune receptors emerging as targets for cancer immunotherapy.</p>
+        <p>Dr. Wisnovsky started his own research group at UBC in July 2021. The Wisnovsky lab focuses on developing and applying new functional genomic screening platforms for studying glycan function. Their work aims to deepen understanding of cellular glycosylation and to identify molecules that can be targeted for therapeutic development.</p>
+        <ul class="timeline">
+          <li><span class="when">2021–</span><span>Principal Investigator, University of British Columbia</span></li>
+          <li><span class="when">2017–2021</span><span>CIHR Banting Postdoctoral Fellow, Stanford University (Bertozzi lab)</span></li>
+          <li><span class="when">PhD</span><span>University of Toronto (Kelley lab)</span></li>
+          <li><span class="when">BSc</span><span>Biochemistry, McGill University</span></li>
+        </ul>
+        <div class="actions"><a class="btn ghost" href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">simon.wisnovsky@ubc.ca<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+    </div>
+
+    <section class="block" style="padding-bottom:0">
+      <h2 class="group-label">Postdoctoral fellows &amp; staff</h2>
+      <ul class="members" id="m-staff"></ul>
+      <h2 class="group-label">Graduate students</h2>
+      <ul class="members" id="m-grad"></ul>
+      <div class="life" id="life">
+        <div class="section-head"><h2 class="group-label">Lab life</h2><span class="meta">Retreats, celebrations and conference trips</span></div>
+        <ul class="gallery" id="gallery"></ul>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 class="group-label">Alumni</h2>
+      <table class="alumni">
+        <thead><tr><th>Name</th><th>In the lab</th><th>Now</th></tr></thead>
+        <tbody id="alumni"></tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<!-- ================= NEWS ================= -->
+<div data-page="news">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>News</h1>
+      <p class="lead">Papers, comps, defences and other milestones from the lab.</p>
+    </div>
+    <div class="news-tools">
+      <div class="seg" role="group" aria-label="Filter news">
+        <button aria-pressed="true" data-n="all">All</button>
+        <button aria-pressed="false" data-n="paper">Papers</button>
+        <button aria-pressed="false" data-n="milestone">Milestones</button>
+        <button aria-pressed="false" data-n="award">Awards</button>
+        <button aria-pressed="false" data-n="event">Events</button>
+      </div>
+    </div>
+    <div id="newslist"></div>
+  </div>
+</div>
+
+<!-- ================= NEWS POST (filled from the news list) ================= -->
+<div data-page="post">
+  <div class="wrap"><article class="article" id="post"></article></div>
+</div>
+
+<!-- ================= JOIN ================= -->
+<div data-page="join">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Join us</h1>
+      <p class="lead">We are actively recruiting creative and motivated researchers to join our group! Wisnovsky lab trainees can expect to receive training in basic molecular biology and immunology techniques as well in cutting-edge areas like high-throughput functional genomics and next-generation sequencing. We aim to equip trainees with the scientific, communication and leadership skills needed to achieve all their goals.</p>
+    </div>
+    <div class="join-grid">
+      <div>
+        <ul class="paths">
+          <li>
+            <svg class="glyph" aria-hidden="true"><use href="#g-sq"/></svg>
+            <div><h2>Graduate students</h2>
+              <p>Prospective graduate students should send a copy of their CV and undergraduate transcripts to <a href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Simon<span class="sr-only"> (opens in a new tab)</span></a>. Depending on interest, they should also consult the UBC Pharmaceutical Sciences <a href="https://pharmsci.ubc.ca/programs/msc-degree" target="_blank" rel="noopener">Masters<span class="sr-only"> (opens in a new tab)</span></a> and/or <a href="https://pharmsci.ubc.ca/programs/phd-degree" target="_blank" rel="noopener">PhD<span class="sr-only"> (opens in a new tab)</span></a> program application timeline and requirements.</p></div>
+          </li>
+          <li>
+            <svg class="glyph" aria-hidden="true"><use href="#g-di"/></svg>
+            <div><h2>Postdoctoral researchers</h2>
+              <p>Prospective postdoctoral researchers interested in joining the group should send <a href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Simon<span class="sr-only"> (opens in a new tab)</span></a> a CV, cover letter and contact information for three references. We especially welcome applications from researchers with prior experience in genetic screening and/or immunology.</p></div>
+          </li>
+          <li>
+            <svg class="glyph" aria-hidden="true"><use href="#g-ci"/></svg>
+            <div><h2>Research assistants</h2>
+              <p>We are also happy to consider research assistant positions (e.g., co-op work terms or summer research projects through the UBC Pharm Sci <a href="https://pharmsci.ubc.ca/research/summer-student-research-program" target="_blank" rel="noopener">SSRP<span class="sr-only"> (opens in a new tab)</span></a>) for senior undergraduates interested in an intensive, full-time research experience prior to applying to graduate or medical school. Candidates for these positions must have prior research experience in a biomedical setting and be competitive for external scholarships such as the <a href="https://pharmsci.ubc.ca/research/summer-student-research-program/nserc-undergraduate-student-research-awards-program" target="_blank" rel="noopener">NSERC USRA<span class="sr-only"> (opens in a new tab)</span></a>.</p></div>
+          </li>
+          <li>
+            <svg class="glyph" aria-hidden="true"><use href="#g-gr"/></svg>
+            <div><h2>Junior undergraduates</h2>
+              <p>Finally, we welcome applications from motivated junior undergraduate students looking to gain lab experience through part-time <a href="https://students.ubc.ca/career/work-learn-program/" target="_blank" rel="noopener">WorkLearn<span class="sr-only"> (opens in a new tab)</span></a> positions and/or Directed Studies projects. We typically do not take on students for unpaid volunteer positions. Please email <a href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Simon<span class="sr-only"> (opens in a new tab)</span></a> directly to learn about any upcoming possible opportunities.</p></div>
+          </li>
+        </ul>
+        <p class="edi">The Wisnovsky lab is committed to maintaining a diverse, inclusive and collegial working environment. We welcome researchers of all races, ethnicities, sexual orientations and gender identities.</p>
+      </div>
+      <aside class="contact-card">
+        <h3>How to apply</h3>
+        <p>Email Simon directly with the materials listed for your position.</p>
+        <a class="btn primary" href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">Email Simon<span class="sr-only"> (opens in a new tab)</span></a>
+        <p class="meta" style="margin:16px 0 0">simon.wisnovsky@ubc.ca</p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<dialog class="lightbox" id="lightbox" aria-label="Photo">
+  <button class="close" aria-label="Close photo">×</button>
+  <div class="lb-img"></div>
+  <p></p>
+</dialog>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div><svg class="glycan-mark" viewBox="0 0 164 60" aria-hidden="true">
+        <g stroke="#0f1a26" stroke-width="1.2" fill="none"><path d="M150 30H128H106M106 30 84 16M106 30 84 44M84 16H18M84 44H18"/></g>
+        <g stroke="#0f1a26" stroke-width="1">
+          <rect x="144" y="24" width="12" height="12" fill="#0072bc"/><rect x="122" y="24" width="12" height="12" fill="#0072bc"/>
+          <circle cx="106" cy="30" r="6" fill="#00a651"/><circle cx="84" cy="16" r="6" fill="#00a651"/><circle cx="84" cy="44" r="6" fill="#00a651"/>
+          <rect x="56" y="10" width="12" height="12" fill="#0072bc"/><rect x="56" y="38" width="12" height="12" fill="#0072bc"/>
+          <circle cx="40" cy="16" r="6" fill="#ffd400"/><circle cx="40" cy="44" r="6" fill="#ffd400"/>
+          <path d="M18 9l7 7-7 7-7-7z" fill="#a54399"/><path d="M18 37l7 7-7 7-7-7z" fill="#a54399"/>
+        </g>
+      </svg><b>Wisnovsky Lab</b>Faculty of Pharmaceutical Sciences<br>University of British Columbia<br>2405 Wesbrook Mall, Vancouver, BC</div>
+      <div><b>Contact</b><a href="mailto:simon.wisnovsky@ubc.ca" target="_blank" rel="noopener">simon.wisnovsky@ubc.ca<span class="sr-only"> (opens in a new tab)</span></a><br><a href="https://twitter.com/Wisnovsky_Lab" target="_blank" rel="noopener">@Wisnovsky_Lab<span class="sr-only"> (opens in a new tab)</span></a></div>
+      <div><b>Explore</b><a href="#/research">Research</a><br><a href="#/publications">Publications</a><br><a href="#/people">People</a><br><a href="#/news">News</a><br><a href="#/join">Join us</a></div>
+    </div>
+    <p class="legal">© 2026 Wisnovsky Lab</p>
+  </div>
+</footer>
+
+
+<script>
+const PI_RE = /(Simon P?\.? ?Wisnovsky)/g;
+const pubs = [
+ ["lab",2026,"Jimmy Kim, Halen Kovacs, Simon Wisnovsky","Rapid discovery of cell-surface glycosylation regulators using a lectin-based magnetic CRISPR screen","Cell Reports Methods","6(8), 101507","https://doi.org/10.1016/j.crmeth.2026.101507"],
+ ["lab",2026,"Jimmy Kim, Halen Kovacs, Simon Wisnovsky","CRISPR screens to identify and characterize ligands for glycan-binding proteins","Methods in Enzymology","","https://doi.org/10.1016/bs.mie.2026.03.005"],
+ ["lab",2026,"John Daly, Lidia Piatnitca, Mohammed Al-Seragi, Vignesh Krishnamoorthy, Simon Wisnovsky","CRISPR activation screens map the genomic landscape of cancer glycome remodeling","Cell Genomics","6(4), 101139","https://doi.org/10.1016/j.xgen.2026.101139"],
+ ["lab",2025,"Olivia Drummond-Guy, John Daly, Angeline Wu, Natalie Stewart, Katie Milne, Chloe Duff, Brad Nelson, Karla Williams, Simon Wisnovsky","Polysialic acid is upregulated on activated immune cells and negatively regulates anticancer immune activity","Frontiers in Oncology","15, 1520948","https://doi.org/10.3389/fonc.2025.1520948"],
+ ["lab",2025,"Vignesh Krishnamoorthy, John Daly, Jimmy Kim, Lidia Piatnitca, Katie Yuen, Bhoj Kumar, Mehrnoush Taherzadeh Ghahfarrokhi, Tom Q.T. Bui, Parastoo Azadi, Ly P Vu, Simon Wisnovsky","The glycosyltransferase ST3GAL4 drives immune evasion in acute myeloid leukemia by synthesizing ligands for the glyco-immune checkpoint receptor Siglec-9","Leukemia","39(2), 346–359","https://doi.org/10.1038/s41375-024-02454-w"],
+ ["lab",2024,"Natalie Stewart, John Daly, Olivia Drummond-Guy, Vignesh Krishnamoorthy, Jessica C. Stark, Nicholas M. Riley, Karla C. Williams, Carolyn R. Bertozzi, Simon P. Wisnovsky","The glyco-immune checkpoint receptor Siglec-7 interacts with T-cell ligands and regulates T-cell activation","Journal of Biological Chemistry","300(2), 105579","https://doi.org/10.1016/j.jbc.2023.105579"],
+ ["lab",2023,"Vignesh Krishnamoorthy, John Daly, Simon Wisnovsky","Identifying Genetic Regulators of Protein-Glycan Interactions with Genome-Wide CRISPR Screening","Current Protocols in Chemical Biology","e646","https://doi.org/10.1002/cpz1.646"],
+ ["lab",2022,"Natalie Stewart, Simon Wisnovsky","Bridging Glycomics and Genomics: New Uses of Functional Genetics in the Study of Cellular Glycosylation","Frontiers in Molecular Biosciences","9, 934584","https://doi.org/10.3389/fmolb.2022.934584"],
+ ["lab",2022,"Simon Wisnovsky, Carolyn R. Bertozzi","Reading the Glyco-Code: Cell-Based Approaches to Studying Protein-Carbohydrate Interactions","Current Opinion in Structural Biology","75, 102395","https://doi.org/10.1016/j.sbi.2022.102395"],
+ ["pre",2026,"Jimmy Kim, Halen Kovacs, Anjali Parthasarathy, Shini Chen, Vignesh Krishnamoorthy, Mohammed Al-Seragi, May Zhao, Yu-Hsuan Huang, Pamela Austin Dean, Pauline Johnson, Calvin D. Roskelley, Simon Wisnovsky","A genome-wide CRISPR screen reveals cancer-specific regulators of hyaluronan binding and cellular invasion","bioRxiv","","https://doi.org/10.64898/2026.02.06.704476"],
+ ["postdoc",2023,"Green Ahn, Roarke Kamber, Simon Wisnovsky, Nicholas M. Riley, Michael C. Bassik, Steven M. Banik, Carolyn R. Bertozzi","Cellular determinants of targeted membrane protein degradation by lysosome targeting chimeras","Science","382, 6668","https://doi.org/10.1126/science.adf6249"],
+ ["postdoc",2023,"Kayvon Pedram, D. Judy Shon, Gabby S. Tender, Angel Kuo, Simon Wisnovsky, Giovanni C. Forcina, Stacy A. Malaker, Davey Huang, Carolyn R. Bertozzi","Design of a mucin-selective protease for targeted degradation of cancer-associated mucins","Nature Biotechnology","","https://doi.org/10.1038/s41587-023-01840-6"],
+ ["postdoc",2021,"Simon Wisnovsky, Leonhard Moeckl, Stacy A. Malaker, Kayvon Pedram, Nick Riley, Gaelen Hess, Melissa A. Gray, Benjamin A.H. Smith, Michael Bassik, W.E. Moerner, Carolyn R. Bertozzi","Genome-Wide CRISPR Screens Reveal a Specific Ligand for the Glycan-Binding Immune Checkpoint Receptor Siglec-7","PNAS","118, e2015024118","https://doi.org/10.1073/pnas.2015024118"],
+ ["postdoc",2020,"Marjoke F. Debets, Omur Y. Tastan, Simon Wisnovsky, Stacy A. Malaker, Nikolaos Angelis, Leonhard K. R. Moeckl, Junwon Choi, Helen Flynn, Lauren J. S. Wagner, Ganka Bineva Todd, Holly L. Douglas, Aristotelis Antononopoulos, Anna Cioce, William J. Browne, Zhen Li, David C. Briggs, Gaelen T. Hess, Anthony J. Agbay, Chloe Roustan, Stuart Haslam, Ambrosius P. Snijders, Michael C. Bassik, William E. Moerner, Vivian S. W. Li, Carolyn R. Bertozzi, Benjamin Schumann","Metabolic precision labeling enables selective probing of O-linked N-acetylgalactosamine glycosylation","PNAS","117, 25293–25301","https://doi.org/10.1073/pnas.2007297117"],
+ ["postdoc",2020,"Benjamin Schumann, Stacy A. Malaker, Simon Wisnovsky, Marjoke F. Debets, Anthony J. Agbay, Daniel Fernandez, Lauren J. S. Wagner, Liang Lin, Zhen Li, Junwon Choi, Douglas M. Fox, Jessie M. Peh, Melissa A. Gray, Kayvon Pedram, Jennifer J. Kohler, Milan Mrksich, Carolyn R. Bertozzi","Bump-and-Hole Engineering Identifies Specific Substrates of Glycosyltransferases in Living Cells","Molecular Cell","78, 824–834","https://doi.org/10.1016/j.molcel.2020.03.030"],
+ ["postdoc",2020,"Steven M. Banik, Kayvon Pedram, Simon Wisnovsky, Green Ahn, Nicholas M. Riley, Carolyn R. Bertozzi","Lysosome Targeting Chimeras (LYTACs) for the Degradation of Secreted and Membrane Proteins","Nature","584, 291–297","https://doi.org/10.1038/s41586-020-2545-9"],
+ ["phd",2018,"Simon Wisnovsky, Tanja Sack, David Pagliarini, Rebecca Laposa, Shana O. Kelley","DNA Polymerase θ Increases Mutational Rates in Mitochondrial DNA","ACS Chemical Biology","13, 900–908","https://doi.org/10.1021/acschembio.8b00072"],
+ ["phd",2017,"Roxana Alta, Hector Vitorino, Dibakar Goswami, Cleber Liria, Simon Wisnovsky, Shana O. Kelley, M. Teresa Machini, Bruno P. Esposito","Mitochondria-Penetrating Peptides Conjugated to Desferrioxamine as Chelators for Mitochondrial Labile Iron","PLoS One","12, e0171729","https://doi.org/10.1371/journal.pone.0171729"],
+ ["phd",2016,"Simon Wisnovsky, Sae Rin Jean, Sanduni Liyanage, Aaron Schimmer, Shana O. Kelley","Mitochondrial DNA Repair and Replication Proteins Revealed by Targeted Chemical Probes","Nature Chemical Biology","12, 567–573","https://doi.org/10.1038/nchembio.2102"],
+ ["phd",2016,"Simon Wisnovsky, Eric Lei, Sae Rin Jean, Shana O. Kelley","Mitochondrial Chemical Biology: New Probes Elucidate the Secrets of the Powerhouse of the Cell","Cell Chemical Biology","23, 917–927","https://doi.org/10.1016/j.chembiol.2016.06.012"],
+ ["phd",2016,"Sae Rin Jean, Marya Ahmed, Eric K. Lei, Simon Wisnovsky, Shana O. Kelley","Peptide-mediated Delivery of Probes and Therapeutics to Mitochondria","Accounts of Chemical Research","49, 1893–1902","https://doi.org/10.1021/acs.accounts.6b00277"],
+ ["phd",2014,"Sae Rin Jean, David V. Tulumello, Simon Wisnovsky, Eric K. Lei, Mark P. Pereira, Shana O. Kelley","Molecular Vehicles for Mitochondrial Chemical Biology and Drug Delivery","ACS Chemical Biology","9, 323–333","https://doi.org/10.1021/cb400821p"],
+ ["phd",2013,"Simon Wisnovsky, Justin Wilson, Robert Radford, Mark Pereira, Maria Chan, Rebecca Laposa, Stephen Lippard, Shana O. Kelley","Targeting Mitochondrial DNA with a Platinum-Based Anticancer Agent","Cell Chemical Biology","20, 1323–1328","https://doi.org/10.1016/j.chembiol.2013.08.010"],
+ ["phd",2013,"Rida Mourtada, Sonali Fonseca, Simon Wisnovsky, Mark Pereira, Xiaoming Wang, Rose Hurren, Jeremy Parfitt, Lesley Larsen, Robin Smith, Michael Murphy, Aaron Schimmer, Shana O. Kelley","Re-Directing an Alkylating Agent to Mitochondria Alters Drug Target and Cell Death Mechanism","PLoS ONE","9, e60253","https://doi.org/10.1371/journal.pone.0060253"],
+ ["phd",2013,"Glen Deleavey, Fillip Frank, Matthew Hassler, Simon Wisnovsky, Bhushan Nagar, Masad Damha","The 5′ Binding MID Domain of Human Argonaute2 Tolerates Chemically Modified Nucleotide Analogues","Nucleic Acid Therapeutics","23, 81–87","https://doi.org/10.1089/nat.2012.0393"]
+];
+const groups = {lab:"Lab publications", pre:"Preprints", postdoc:"Postdoctoral publications", phd:"PhD publications"};
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const authors = a => esc(a).replace(PI_RE, "<b>$1</b>");
+const pubItem = (p, cls="pub") => {
+  const long = cls === "pub" && p[2].split(",").length > 4;   // phones clamp these to two lines
+  return `<li class="${cls}${long ? " long" : ""}"><span class="yr">${p[1]}</span><div>
+  <span class="t">${esc(p[3])}</span><span class="a">${authors(p[2])}</span>
+  <span class="j"><i>${esc(p[4])}</i>${p[5] ? " " + esc(p[5]) : ""}${p[6] ? `<a class="doi" href="${p[6]}" target="_blank" rel="noopener">DOI<svg class="ext" aria-hidden="true"><use href="#ext"/></svg><span class="sr-only"> (opens in a new tab)</span></a>` : ""}</span>
+  ${long ? `<button class="toggle" aria-expanded="false">Show all authors</button>` : ""}</div></li>`;
+};
+const status = document.getElementById("status");
+const say = msg => { status.textContent = ""; setTimeout(() => status.textContent = msg, 50); };
+
+document.getElementById("recent").innerHTML = pubs.filter(p=>p[0]==="lab").slice(0,3).map(p=>pubItem(p,"")).join("");
+
+let filter = "all";
+function renderPubs(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  let html = "";
+  for (const g of Object.keys(groups)){
+    if (filter !== "all" && filter !== g) continue;
+    const items = pubs.filter(p => p[0]===g && (!q || p.slice(2,6).join(" ").toLowerCase().includes(q)));
+    if (!items.length) continue;
+    html += `<section class="pub-group"><h2>${groups[g]} <span class="count num">${items.length}</span></h2><ul class="pub-list">${items.map(p=>pubItem(p)).join("")}</ul></section>`;
+  }
+  document.getElementById("publist").innerHTML = html || `<p class="empty">No publications match “${esc(q)}”. Try an author’s surname or a journal name.</p>`;
+  fitToggles();
+  return document.querySelectorAll("#publist .pub").length;
+}
+/* only offer "Show all authors" where the two-line clamp actually hides names */
+function fitToggles(){
+  document.querySelectorAll("#publist .pub.long:not(.open)").forEach(li => {
+    const a = li.querySelector(".a");
+    li.querySelector(".toggle").hidden = a.scrollHeight <= a.clientHeight + 1;
+  });
+}
+addEventListener("resize", fitToggles, {passive:true});
+const pubCount = n => say(`${n} publication${n === 1 ? "" : "s"} shown`);
+document.querySelectorAll(".seg button[data-f]").forEach(b => b.addEventListener("click", () => {
+  filter = b.dataset.f;
+  document.querySelectorAll(".seg button[data-f]").forEach(x => x.setAttribute("aria-pressed", x===b));
+  pubCount(renderPubs());
+}));
+let qTimer;
+document.getElementById("q").addEventListener("input", () => {
+  const n = renderPubs();
+  clearTimeout(qTimer); qTimer = setTimeout(() => pubCount(n), 600);   // announce once typing pauses
+});
+document.getElementById("publist").addEventListener("click", e => {
+  const b = e.target.closest(".toggle"); if (!b) return;
+  const open = b.closest(".pub").classList.toggle("open");
+  b.setAttribute("aria-expanded", open); b.textContent = open ? "Show fewer authors" : "Show all authors";
+});
+renderPubs();
+
+const CDN = "images/web/";
+const staff = [
+ ["Dr. John Daly","Postdoctoral Fellow","team-dr-john-daly.jpg"],
+ ["Dr. Tigist Batu","Postdoctoral Fellow","team-dr-tigist-batu.jpg"],
+ ["Jimmy Kim","Research Technician","team-jimmy-kim.jpg"]
+];
+const grad = [
+ ["Natalie Stewart","PhD Candidate","team-natalie-stewart.jpg"],
+ ["Vignesh Krishnamoorthy","PhD Candidate","team-vignesh-krishnamoorthy.jpg"],
+ ["Angeline Wu","PhD Candidate","team-angeline-wu.jpg"],
+ ["Lidia Piatnitca","PhD Candidate","team-lidia-piatnica.jpg"],
+ ["Halen Kovacs","PhD Candidate","team-halen-kovacs.jpg"],
+ ["Anjali Parthasarathy","MSc Student","team-anjali-parthasarathy.jpg"],
+ ["Andrew Huang","MSc Student","team-andrew-huang.jpg"]
+];
+const card = m => `<li><img loading="lazy" src="${CDN}${m[2]}" alt="Portrait of ${esc(m[0])}"><span class="n">${esc(m[0])}</span><span class="r">${esc(m[1])}</span></li>`;
+/* team photos are fetched in the background once the first page has finished loading,
+   so they show instantly when People opens without slowing the first screen */
+addEventListener("load", () => {
+  const warm = () => [...staff, ...grad].forEach(m => { const img = new Image(); img.src = CDN + m[2]; });
+  "requestIdleCallback" in window ? requestIdleCallback(warm, {timeout: 2000}) : setTimeout(warm, 1000);
+});
+let peopleShown = false;
+function renderPeople(){
+  if (peopleShown) return; peopleShown = true;
+  document.getElementById("m-staff").innerHTML = staff.map(card).join("");
+  document.getElementById("m-grad").innerHTML = grad.map(card).join("");
+}
+
+const alumni = [
+ ["Olivia Drummond-Guy","MSc, 2024","PhD, Medical Biophysics, University of Toronto"],
+ ["Annabel Chen","Co-op research technician, 2023–2024","MSc, NYU"],
+ ["Sophia Mair","Visiting international research student, 2023–2024","Technical Author, Bachem"],
+ ["May Zhao","Co-op research technician, 2022","Optometry Program, University of Waterloo"],
+ ["Cassie Huang","Research Technician, 2025–2026","MD Program, University of British Columbia"],
+ ["Mohammed Al-Seragi","Co-op research technician, 2025–2026","MD Program, University of British Columbia"],
+ ["Lucie Wang","Co-op research technician, 2025–2026","BSc, UBC"]
+];
+/* most recent first: sorted by the last year in "In the lab", then the first; entries without a year go last */
+const alumniYears = a => (a[1].match(/\b(19|20)\d{2}\b/g) || []).map(Number);
+alumni.sort((a, b) => {
+  const ya = alumniYears(a), yb = alumniYears(b);
+  return (yb.at(-1) ?? 0) - (ya.at(-1) ?? 0) || (yb[0] ?? 0) - (ya[0] ?? 0);
+});
+document.getElementById("alumni").innerHTML = alumni.map(a=>`<tr><td>${esc(a[0])}</td><td>${esc(a[1])}</td><td>${esc(a[2])}</td></tr>`).join("");
+
+/* ---------- news ----------
+   To post an update, add one entry. Order doesn't matter; newest shows first.
+   d: "YYYY-MM" (or just "YYYY")   k: paper | milestone | award | event
+   t: headline   b: one or two sentences   link/go: optional link + its label
+   img: optional photo in images/web/ (card thumbnail + top of the post page)   label: overrides the tag text (e.g. "Preprint")
+   body: optional ["paragraph", "paragraph", ...] for the post page; without it the page shows b
+   slug: optional page address (#/news/slug); made from the headline when left out
+   example: true marks a placeholder; delete those once real posts are in. */
+const news = [
+ {d:"2026-10", k:"milestone", example:true, t:"PhD candidate passes comprehensive exam", b:"Placeholder showing how comps, defences and graduations appear. Replace it with a real update or delete it."},
+ {d:"2026-08", k:"paper", t:"Lectin-based magnetic CRISPR screens, out in Cell Reports Methods", b:"Jimmy Kim and Halen Kovacs report a rapid way to discover regulators of cell-surface glycosylation using a lectin-based magnetic CRISPR screen.", link:"#/publications", go:"See the paper"},
+ {d:"2026-04", k:"paper", t:"Mapping cancer glycome remodeling with CRISPRa, in Cell Genomics", b:"Led by John Daly with Lidia Piatnitca, Mohammed Al-Seragi and Vignesh Krishnamoorthy, CRISPR activation screens chart the genomic landscape of glycome remodeling in cancer.", link:"#/publications", go:"See the paper"},
+ {d:"2026-02", k:"paper", label:"Preprint", t:"New preprint: cancer-specific regulators of hyaluronan binding", b:"A genome-wide CRISPR screen led by Jimmy Kim and Halen Kovacs reveals regulators of hyaluronan binding and cellular invasion in cancer cells.", link:"https://doi.org/10.64898/2026.02.06.704476", go:"Read on bioRxiv"},
+ {d:"2025-10", k:"event", example:true, t:"Lab members present at a glycobiology conference", b:"Placeholder for talks, posters and conference trips. Replace it with a real update or delete it."},
+ {d:"2025-02", k:"paper", t:"ST3GAL4 drives immune evasion in AML, in Leukemia", b:"Vignesh Krishnamoorthy and colleagues show that the glycosyltransferase ST3GAL4 helps leukemia cells evade the immune system by building ligands for the checkpoint receptor Siglec-9.", link:"#/publications", go:"See the paper"},
+ {d:"2025", k:"paper", t:"Polysialic acid restrains anticancer immunity, in Frontiers in Oncology", b:"Olivia Drummond-Guy and colleagues find that polysialic acid is upregulated on activated immune cells and negatively regulates anticancer immune activity.", link:"#/publications", go:"See the paper"},
+ {d:"2024", k:"milestone", t:"Olivia Drummond-Guy completes MSc", b:"Olivia has moved on to a PhD in Medical Biophysics at the University of Toronto. Congratulations!"},
+ {d:"2024-02", k:"paper", t:"Siglec-7 engages T-cell ligands, in the Journal of Biological Chemistry", b:"Natalie Stewart and colleagues show that the glyco-immune checkpoint receptor Siglec-7 interacts with T-cell ligands and regulates T-cell activation.", link:"#/publications", go:"See the paper"},
+ {d:"2021-07", k:"milestone", t:"The Wisnovsky Lab opens at UBC", b:"Simon Wisnovsky starts the lab in the Faculty of Pharmaceutical Sciences at the University of British Columbia."}
+].sort((a,b) => b.d.localeCompare(a.d));
+const slugify = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+news.forEach(n => {   // every post gets a unique address, #/news/<slug>
+  let s = n.slug || slugify(n.t), i = 2;
+  while (news.some(o => o !== n && o.slug === s)) s = (n.slug || slugify(n.t)) + "-" + i++;
+  n.slug = s;
+});
+const KINDS = {paper:["Paper","g-sq"], milestone:["Milestone","g-di"], award:["Award","g-ci"], event:["Event","g-gr"]};
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const when = d => { const [y,m] = d.split("-"); return m ? `${MON[m-1]} ${y}` : y; };
+const tag = n => `<span class="tag" data-k="${n.k}"><svg class="glyph" aria-hidden="true"><use href="#${KINDS[n.k][1]}"/></svg>${esc(n.label || KINDS[n.k][0])}${n.example ? `<span class="ex">Example</span>` : ""}</span>`;
+
+document.getElementById("news-recent").innerHTML = news.filter(n=>!n.example).slice(0,3).map(n =>
+  `<li><span class="yr">${when(n.d)}</span><div>${tag(n)}<a class="t" href="#/news/${n.slug}">${esc(n.t)}</a></div></li>`).join("");
+
+const goLink = (n, cls) => /^https?:/.test(n.link)
+  ? `<a class="${cls}" href="${n.link}" target="_blank" rel="noopener">${esc(n.go || "Read more")}<svg class="ext" aria-hidden="true"><use href="#ext"/></svg><span class="sr-only"> (opens in a new tab)</span></a>`
+  : `<a class="${cls}" href="${n.link}">${esc(n.go || "Read more")}</a>`;
+const thumb = n => n.img
+  ? `<img class="thumb" loading="lazy" src="${CDN}${n.img}" alt="">`
+  : `<div class="thumb thumb-art" aria-hidden="true"><svg><use href="#${KINDS[n.k][1]}"/></svg></div>`;
+function renderNews(kind){
+  const items = news.filter(n => kind==="all" || n.k===kind);
+  document.getElementById("newslist").innerHTML = items.length
+    ? `<ul class="ncards">` + items.map(n => `<li class="ncard" data-k="${n.k}">${thumb(n)}<div class="body">${tag(n)}
+        <h2><a href="#/news/${n.slug}">${esc(n.t)}</a></h2>${n.b ? `<p>${esc(n.b)}</p>` : ""}
+        <time datetime="${n.d}">${when(n.d)}</time></div></li>`).join("") + `</ul>`
+    : `<p class="empty">No ${KINDS[kind][0].toLowerCase()} posts yet.</p>`;
+}
+/* one post on its own page; returns the post, or null if the address matches none */
+function renderPost(slug){
+  const n = news.find(x => x.slug === slug); if (!n) return null;
+  const related = news.filter(x => x !== n && !x.example)
+    .sort((a, b) => (a.k !== n.k) - (b.k !== n.k) || b.d.localeCompare(a.d)).slice(0, 3);
+  document.getElementById("post").innerHTML = `<a class="back" href="#/news">Back to news</a>
+    <div class="meta-row">${tag(n)}<time datetime="${n.d}">${when(n.d)}</time></div>
+    <h1>${esc(n.t)}</h1>
+    ${n.img ? `<img class="hero-img" src="${CDN}${n.img}" alt="${esc(n.alt || "")}">` : ""}
+    <div class="text">${(n.body || [n.b]).filter(Boolean).map(t => `<p>${esc(t)}</p>`).join("")}</div>
+    ${n.link ? `<div class="actions">${goLink(n, "btn primary")}</div>` : ""}
+    ${related.length ? `<section class="related"><h2>Related news</h2><ul>${related.map(x =>
+      `<li>${tag(x)}<a href="#/news/${x.slug}">${esc(x.t)}</a><time datetime="${x.d}">${when(x.d)}</time></li>`).join("")}</ul></section>` : ""}`;
+  return n;
+}
+document.querySelectorAll(".seg button[data-n]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".seg button[data-n]").forEach(x => x.setAttribute("aria-pressed", x===b));
+  renderNews(b.dataset.n);
+  const n = document.querySelectorAll("#newslist .ncard").length;
+  say(`${n} post${n === 1 ? "" : "s"} shown`);
+}));
+renderNews("all");
+
+/* Lab-life photos: put the full-size file in images/events/, a web copy in images/web/, then set src.
+   Entries with an empty src show as "Add photo" placeholders. */
+const photos = [
+ {src:"", n:"Lab retreat", d:""},
+ {src:"", n:"Holiday party", d:""},
+ {src:"", n:"Conference trip", d:""},
+ {src:"", n:"Defence celebration", d:""},
+ {src:"", n:"Summer students", d:""},
+ {src:"", n:"Lab lunch", d:""}
+];
+document.getElementById("gallery").innerHTML = photos.map((p,i) => `<li><figure class="shot">${p.src
+    ? `<button data-shot="${i}" aria-label="View photo: ${esc(p.n)}"><img loading="lazy" src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}"></button>`
+    : `<div class="ph"><svg aria-hidden="true"><use href="#cam"/></svg><span class="ph-label">Add photo</span></div>`}
+  <figcaption><span class="n">${esc(p.n)}</span>${p.d ? `<span class="d">${when(p.d)}</span>` : ""}</figcaption></figure></li>`).join("");
+const lb = document.getElementById("lightbox");
+document.getElementById("gallery").addEventListener("click", e => {
+  const b = e.target.closest("[data-shot]"); if (!b) return;
+  const p = photos[b.dataset.shot];
+  lb.querySelector(".lb-img").innerHTML = `<img src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}">`;
+  lb.querySelector("p").textContent = p.d ? `${p.n}, ${when(p.d)}` : p.n;
+  lb.showModal();
+});
+lb.querySelector(".close").addEventListener("click", () => lb.close());
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+
+/* tiny hash router: #/page or #/page/anchor */
+const titles = {home:"Wisnovsky Lab", research:"Research — Wisnovsky Lab", publications:"Publications — Wisnovsky Lab", people:"People — Wisnovsky Lab", news:"News — Wisnovsky Lab", join:"Join us — Wisnovsky Lab"};
+let current = null;
+function route(){
+  if (location.hash === "#content") return;   // skip link, not a page change
+  const [, page="", anchor] = location.hash.split("/");
+  let name = titles[page] ? page : "home";
+  // #/news/<slug> opens that post on its own page (#/news/life still jumps to the photos)
+  const post = name === "news" && anchor && !document.getElementById(anchor) ? renderPost(anchor) : null;
+  if (post) name = "post";
+  const key = post ? "post/" + post.slug : name;
+  const changed = current !== null && current !== key;
+  document.querySelectorAll("[data-page]").forEach(el => el.classList.toggle("active", el.dataset.page===name));
+  const navName = post ? "news" : name;
+  document.querySelectorAll("[data-nav]").forEach(a => a.dataset.nav===navName ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
+  document.title = post ? `${post.t} — Wisnovsky Lab` : titles[name];
+  if (name === "publications") fitToggles();   // lists can only be measured once visible
+  if (name === "people") renderPeople();
+  const target = !post && anchor && document.getElementById(anchor);
+  if (target) target.scrollIntoView({block:"start"});
+  else window.scrollTo(0,0);
+  // On a page change, move focus to the new page's heading so screen readers announce it
+  if (changed && !target){
+    const h1 = document.querySelector(`[data-page="${name}"] h1`);
+    if (h1){ h1.tabIndex = -1; h1.focus({preventScroll:true}); }
+  }
+  current = key;
+}
+addEventListener("hashchange", route);
+route();
+
+document.querySelector(".skip").addEventListener("click", e => {
+  e.preventDefault(); document.getElementById("content").focus();
+});
+
+/* phone menu: showModal() keeps focus inside the menu, makes the page behind inert,
+   closes on Esc, and returns focus to the menu button when it closes */
+const sheet = document.getElementById("sheet"), menuBtn = document.getElementById("menuBtn");
+menuBtn.addEventListener("click", () => sheet.showModal());
+sheet.querySelector(".close").addEventListener("click", () => sheet.close());
+sheet.querySelectorAll("a").forEach(a => a.addEventListener("click", () => sheet.close()));
+matchMedia("(min-width:761px)").addEventListener("change", e => { if (e.matches && sheet.open) sheet.close(); });
+
+addEventListener("scroll", () => document.querySelector("header.site").classList.toggle("scrolled", scrollY > 8), {passive:true});
+
+/* research "on this page" highlight */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) document.querySelectorAll("[data-toc]").forEach(a => a.classList.toggle("on", a.dataset.toc===e.target.id));
+}), {rootMargin:"-30% 0px -60% 0px"});
+document.querySelectorAll(".theme").forEach(t => io.observe(t));
+</script>
+</body>
+</html>

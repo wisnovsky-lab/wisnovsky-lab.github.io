@@ -28,6 +28,11 @@ LAB.staff = [
     name: "Jimmy Kim",
     role: "Research Technician",
     photo: "team-jimmy-kim.jpg"
+  },
+ {
+    name: "",
+    role: "PhD Candidate",
+    photo: "team-firstname-lastname.jpg"
   }
 ];
 

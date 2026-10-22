@@ -13,7 +13,7 @@
 */
 LAB.photos = [
   {
-    photo: "",
+    photo: "Lab Bowling - 2025.jpeg",
     caption: "Lab retreat"
   },
   {

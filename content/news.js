@@ -29,9 +29,15 @@
 LAB.news = [
   {
     date: "2026-10",
+    type: "paper",
+    title: "Test",
+    summary: "Test"
+  },
+  {
+    date: "2026-10",
     type: "milestone",
     title: "Lidia passes comprehensive exam",
-    summary: "Lidia Piatnitca successfully passes her PhD comprehensive exam and is officially a PhD candidate. Congratulations!",
+    summary: "Lidia Piatnitca successfully passes her PhD comprehensive exam and is officially a PhD candidate. Congratulations!"
   },
   {
     date: "2026-08",
@@ -62,7 +68,7 @@ LAB.news = [
     date: "2026-05",
     type: "event",
     title: "Lab members present at Canadian Glycomics Symposium",
-    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 Canadian Glycomics Symposium in Canmore, Alberta.",
+    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 Canadian Glycomics Symposium in Canmore, Alberta."
   },
   {
     date: "2025-02",

@@ -29,12 +29,6 @@
 LAB.news = [
   {
     date: "2026-10",
-    type: "paper",
-    title: "Test",
-    summary: "Test"
-  },
-  {
-    date: "2026-10",
     type: "milestone",
     title: "Lidia passes comprehensive exam",
     summary: "Lidia Piatnitca successfully passes her PhD comprehensive exam and is officially a PhD candidate. Congratulations!"

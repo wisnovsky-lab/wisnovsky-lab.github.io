@@ -81,6 +81,13 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
   .photo-pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
   .photo-pick img{width:96px;height:72px;object-fit:cover;border-radius:4px;border:1px solid var(--line);background:var(--wash)}
   .photo-pick input[type=file]{font:inherit;font-size:.92rem;max-width:100%}
+  /* gallery-preview cropper: the photo at its full shape, with a draggable 4:3 frame */
+  .crop-stage{position:relative;width:fit-content;max-width:100%;overflow:hidden;border-radius:4px;background:var(--wash);touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
+  .crop-stage img{display:block;max-width:100%;max-height:380px;width:auto;height:auto;pointer-events:none}
+  .crop-frame{position:absolute;box-shadow:0 0 0 9999px rgba(15,26,38,.55);outline:2px solid #fff;outline-offset:-2px;cursor:move;touch-action:none}
+  .crop-frame:focus-visible{outline:3px solid #fff;box-shadow:0 0 0 3px var(--link),0 0 0 9999px rgba(15,26,38,.55)}
+  .crop-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .crop-tools input[type=range]{flex:1;min-width:120px;max-width:240px;min-height:44px;accent-color:var(--ubc)}
 
   .btn{font:inherit;font-weight:500;border-radius:var(--radius);padding:9px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line-strong);background:#fff;color:var(--ink)}
   .btn:hover{background:var(--wash)}
@@ -274,7 +281,8 @@ const SECTIONS = {
       {k: "photo", label: "Photo", type: "photo", req: true, max: [1600, 1600], file: v => `life-${v.date || thisYear}-${E.slugify(v.caption).slice(0, 40)}`},
       {k: "caption", label: "Caption", req: true},
       {k: "date", label: "Date (optional)", type: "date", hint: "Year and month, like 2026-10."},
-      {k: "alt", label: "Photo description", hint: "A few words describing the photo, for people using screen readers."}
+      {k: "alt", label: "Photo description", hint: "A few words describing the photo, for people using screen readers."},
+      {k: "crop", label: "Gallery preview", type: "crop", hint: "Drag the box (or use the arrow keys) and the zoom slider to choose what shows in the gallery tile. Clicking the tile on the website still shows the whole photo."}
     ]
   }
 };
@@ -292,9 +300,73 @@ function fieldHTML(f, id) {
   else if (f.type === "photo") return `<div class="field"><span class="label" id="${id}-l">${esc(f.label)}${req}</span>
       <div class="photo-pick"><img alt="" hidden><input type="file" id="${id}" name="${f.k}" accept="image/*" aria-labelledby="${id}-l"${desc}></div>
       <span class="hint photo-info"></span>${hint}</div>`;
+  else if (f.type === "crop") return `<div class="field crop-field" hidden><span class="label" id="${id}-l">${esc(f.label)}</span>
+      <div class="crop-stage"><img alt=""><div class="crop-frame" tabindex="0" role="group" aria-labelledby="${id}-l"${desc}></div></div>
+      <div class="crop-tools"><label for="${id}-z">Zoom</label><input type="range" id="${id}-z" min="1" max="3" step="0.01" value="1">
+        <button type="button" class="btn link" data-crop-reset>Reset to centre</button></div>
+      <input type="hidden" id="${id}" name="${f.k}">${hint}</div>`;
   else if (f.doi) input = `<div class="row"><input type="text" id="${id}" name="${f.k}" inputmode="url" spellcheck="false"${desc}><button type="button" class="btn" data-fill>Fill in</button></div>`;
   else input = `<input type="${f.type === "number" ? "number" : "text"}" id="${id}" name="${f.k}"${f.type === "date" ? ' placeholder="2026-10" pattern="\\d{4}(-\\d{2})?"' : ""}${f.type === "number" ? ' min="1990" max="2100"' : ""}${f.list ? ` list="${id}-list"` : ""}${r}${desc}>${f.list ? `<datalist id="${id}-list">${f.list.map(o => `<option value="${esc(o)}">`).join("")}</datalist>` : ""}`;
   return `<div class="field"><label for="${id}">${esc(f.label)}${req}</label>${input}${hint}</div>`;
+}
+
+/* gallery-preview cropper: a 4:3 frame over the whole photo. Writes "x y w h" (percent of the
+   photo's width and height) into the hidden input, or "" when the frame is the centred default */
+function cropper(wrap, input) {
+  const stage = wrap.querySelector(".crop-stage"), img = stage.querySelector("img");
+  const frame = wrap.querySelector(".crop-frame"), zoom = wrap.querySelector("input[type=range]");
+  const A = 4 / 3;   // gallery tiles are 4:3
+  let iw = 1, ih = 1, cx = .5, cy = .5, w = 1, h = 1;
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  function layout() {
+    const wmax = Math.min(1, A * ih / iw);   // the widest 4:3 frame that fits the photo
+    w = wmax / +zoom.value; h = w * iw / (A * ih);
+    cx = clamp(cx, w / 2, 1 - w / 2); cy = clamp(cy, h / 2, 1 - h / 2);
+    const x = cx - w / 2, y = cy - h / 2;
+    Object.assign(frame.style, {left: x * 100 + "%", top: y * 100 + "%", width: w * 100 + "%", height: h * 100 + "%"});
+    const centred = +zoom.value === 1 && Math.abs(cx - .5) < .001 && Math.abs(cy - .5) < .001;
+    input.value = centred ? "" : [x, y, w, h].map(v => Math.round(v * 1000) / 10).join(" ");
+  }
+  function load(src, value) {
+    wrap.hidden = false;
+    img.onload = () => {
+      iw = img.naturalWidth; ih = img.naturalHeight;
+      const c = String(value || "").trim().split(/\s+/).map(Number);
+      zoom.value = 1; cx = cy = .5;
+      if (c.length === 4 && c.every(n => n >= 0) && c[2] > 0) {
+        zoom.value = clamp(Math.min(1, A * ih / iw) / (c[2] / 100), 1, 3);
+        cx = (c[0] + c[2] / 2) / 100; cy = (c[1] + c[3] / 2) / 100;
+      }
+      layout();
+    };
+    img.src = src;
+  }
+  function hide() { wrap.hidden = true; input.value = ""; img.removeAttribute("src"); }
+  // drag the frame, or click anywhere on the photo to centre the frame there
+  let drag = null;
+  stage.addEventListener("pointerdown", e => {
+    const r = stage.getBoundingClientRect();
+    if (e.target !== frame) { cx = (e.clientX - r.left) / r.width; cy = (e.clientY - r.top) / r.height; layout(); }
+    drag = {x: e.clientX, y: e.clientY, cx, cy, r};
+    stage.setPointerCapture(e.pointerId);
+    frame.focus({preventScroll: true});
+  });
+  stage.addEventListener("pointermove", e => {
+    if (!drag) return;
+    cx = drag.cx + (e.clientX - drag.x) / drag.r.width; cy = drag.cy + (e.clientY - drag.y) / drag.r.height;
+    layout();
+  });
+  stage.addEventListener("pointerup", () => drag = null);
+  stage.addEventListener("pointercancel", () => drag = null);
+  frame.addEventListener("keydown", e => {
+    const step = e.shiftKey ? .1 : .02;
+    const d = {ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step]}[e.key];
+    if (!d) return;
+    e.preventDefault(); cx += d[0]; cy += d[1]; layout();
+  });
+  zoom.addEventListener("input", layout);
+  wrap.querySelector("[data-crop-reset]").onclick = () => { zoom.value = 1; cx = cy = .5; layout(); };
+  return {load, hide};
 }
 
 /* builds one add/edit form; returns helpers to fill it for editing */
@@ -309,6 +381,7 @@ function makeForm(secKey, mount) {
   let editing = null, shrunk = {};
 
   const el = k => form.elements[k];
+  const crop = sec.fields.some(f => f.type === "crop") ? cropper(form.querySelector(".crop-field"), el("crop")) : null;
   const errBox = form.querySelector(".inline-err");
   function clearErrors() {
     errBox.hidden = true; errBox.textContent = "";
@@ -338,6 +411,7 @@ function makeForm(secKey, mount) {
     form.querySelector("[data-save]").textContent = "Save";
     form.querySelectorAll(".photo-pick img").forEach(i => { i.hidden = true; i.removeAttribute("src"); });
     form.querySelectorAll(".photo-info").forEach(s => s.textContent = "");
+    if (crop) crop.hide();
     if (secKey === "news") el("date").value = thisMonth;
     if (el("year")) el("year").value = thisYear;
     clearErrors();
@@ -353,6 +427,8 @@ function makeForm(secKey, mount) {
       if (f.type === "photo") {
         const img = form.querySelector(".photo-pick img");
         if (v) { img.src = "../images/web/" + encodeURI(v); img.hidden = false; form.querySelector(".photo-info").textContent = "Current photo. Choose a file to replace it."; }
+      } else if (f.type === "crop") {
+        if (entry.photo) crop.load("../images/web/" + encodeURI(entry.photo), v);
       } else if (el(f.k)) el(f.k).value = f.paragraphs && Array.isArray(v) ? v.join("\n\n") : (v ?? "");
     }
     form.scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
@@ -370,6 +446,7 @@ function makeForm(secKey, mount) {
       const s = await E.shrinkPhoto(inp.files[0], ...f.max, f.aspect);
       shrunk[inp.name] = s; img.src = s.url; img.hidden = false;
       info.textContent = `Ready: ${s.width} × ${s.height} px, ${s.kb} KB.`;
+      if (crop) crop.load(s.url, "");   // a new photo starts from the centred preview
     } catch (e) { info.textContent = ""; inp.value = ""; note("err", esc(e.message)); }
   }));
 

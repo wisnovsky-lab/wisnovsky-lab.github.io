@@ -287,6 +287,9 @@ color:var(--ink-3);font-size:.9rem}
   .shot button:focus-visible{outline:2px solid var(--link);outline-offset:3px}
   .shot img,.shot .ph{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
   .shot button:hover img{filter:brightness(1.04)}
+  /* a preview framed in the editor: the photo is scaled and shifted inside a 4:3 window */
+  .shot .crop{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:4px;background:var(--wash)}
+  .shot .crop img{position:absolute;max-width:none;aspect-ratio:auto;border-radius:0}
   .shot .ph{display:grid;place-content:center;justify-items:center;gap:8px;background:var(--wash);border:1px dashed #cfd5db;color:var(--ink-3);font-size:.88rem}
   .shot .ph svg{width:24px;height:24px}
   .shot figcaption{margin-top:10px}
@@ -940,10 +943,18 @@ renderNews("all");
 
 /* Lab-life photos (entries live in content/photos.js); an empty photo shows an "Add photo" placeholder.
    Shown newest first by date; undated photos keep their file order at the end */
-const photos = LIST("photos").map(p => ({src: str(p.photo), n: str(p.caption), d: str(p.date), alt: p.alt}))
+const photos = LIST("photos").map(p => ({src: str(p.photo), n: str(p.caption), d: str(p.date), alt: p.alt, crop: str(p.crop)}))
   .sort((a, b) => (b.d || "").localeCompare(a.d || ""));
+/* "crop" (set with the editor's Gallery preview tool) is "x y w h": the tile's window, in percent of the photo */
+const tileImg = p => {
+  const img = `<img loading="lazy" src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}"`;
+  const [x, y, w, h] = p.crop.trim().split(/\s+/).map(Number);
+  if (!(w > 0 && h > 0 && x >= 0 && y >= 0)) return img + ">";
+  const pc = v => +v.toFixed(3) + "%";
+  return `<span class="crop">${img} style="width:${pc(1e4 / w)};height:${pc(1e4 / h)};left:${pc(-x * 100 / w)};top:${pc(-y * 100 / h)}"></span>`;
+};
 document.getElementById("gallery").innerHTML = photos.map((p,i) => `<li><figure class="shot">${p.src
-    ? `<button data-shot="${i}" aria-label="View photo: ${esc(p.n)}"><img loading="lazy" src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}"></button>`
+    ? `<button data-shot="${i}" aria-label="View photo: ${esc(p.n)}">${tileImg(p)}</button>`
     : `<div class="ph"><svg aria-hidden="true"><use href="#cam"/></svg><span class="ph-label">Add photo</span></div>`}
   <figcaption><span class="n">${esc(p.n)}</span>${p.d ? `<span class="d">${when(p.d)}</span>` : ""}</figcaption></figure></li>`).join("");
 /* photo viewer: arrows, arrow keys or a swipe step through the photos (empty placeholders are skipped) */

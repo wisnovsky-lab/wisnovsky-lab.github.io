@@ -14,7 +14,7 @@
     staff:        {file: "content/people.js", fields: ["name", "role", "photo"]},
     students:     {file: "content/people.js", fields: ["name", "role", "photo"]},
     alumni:       {file: "content/people.js", fields: ["name", "inLab", "nowAt"]},
-    photos:       {file: "content/photos.js", fields: ["photo", "caption", "date", "alt"], keepEmpty: ["photo"]}
+    photos:       {file: "content/photos.js", fields: ["photo", "caption", "date", "alt", "crop"], keepEmpty: ["photo"]}
   };
 
   /* ---------- content files ---------- */

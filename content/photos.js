@@ -1,6 +1,7 @@
 /* LAB LIFE PHOTOS  (People page, under Graduate students)
    1. Upload the photo to the images/web folder (about 1600 px wide, under ~400 KB).
    2. Put its file name in "photo", plus a caption and (optionally) a date and description.
+   "crop" is set by the editor's Gallery preview tool; leave it out to show the centre of the photo.
    Entries with photo: "" show as grey "Add photo" placeholders. Delete any you don't need.
 
    TEMPLATE (copy from { to },):
@@ -35,6 +36,7 @@ LAB.photos = [
   {
     photo: "life-2025-11-congratulations-jimmy-msc-3.jpg",
     caption: "Congratulations Jimmy, MSc!!",
-    date: "2025-11"
+    date: "2025-11",
+    crop: "0 0 100 42.4"
   }
 ];

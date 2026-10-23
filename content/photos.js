@@ -15,9 +15,5 @@ LAB.photos = [
   {
     photo: "Lab Bowling - 2025.jpeg",
     caption: "Lab bowling retreat @ Grandview Bowling"
-  },
-  {
-    photo: "",
-    caption: "Summer students"
   }
 ];

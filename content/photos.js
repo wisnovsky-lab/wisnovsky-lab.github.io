@@ -19,9 +19,5 @@ LAB.photos = [
   {
     photo: "",
     caption: "Summer students"
-  },
-  {
-    photo: "",
-    caption: "Lab lunch"
   }
 ];

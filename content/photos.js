@@ -18,10 +18,6 @@ LAB.photos = [
   },
   {
     photo: "",
-    caption: "Holiday party"
-  },
-  {
-    photo: "",
     caption: "Conference trip"
   },
   {

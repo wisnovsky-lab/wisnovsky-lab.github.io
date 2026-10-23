@@ -30,8 +30,8 @@ LAB.news = [
   {
     date: "2026-10",
     type: "milestone",
-    title: "PhD candidate passes comprehensive exam",
-    summary: "Placeholder showing how comps, defences and graduations appear. Replace it with a real update or delete it.",
+    title: "Lidia passes comprehensive exam",
+    summary: "Lidia Piatnitca successfully passes her PhD comprehensive exam and is officially a PhD candidate. Congratulations!",
     example: true
   },
   {
@@ -55,7 +55,7 @@ LAB.news = [
     type: "paper",
     label: "Preprint",
     title: "New preprint: cancer-specific regulators of hyaluronan binding",
-    summary: "A genome-wide CRISPR screen led by Jimmy Kim and Halen Kovacs reveals regulators of hyaluronan binding and cellular invasion in cancer cells.",
+    summary: "A genome-wide CRISPR screen reveals regulators of hyaluronan binding and cellular invasion in cancer cells.",
     link: "https://doi.org/10.64898/2026.02.06.704476",
     linkText: "Read on bioRxiv"
   },

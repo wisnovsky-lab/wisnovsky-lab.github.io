@@ -32,7 +32,6 @@ LAB.news = [
     type: "milestone",
     title: "Lidia passes comprehensive exam",
     summary: "Lidia Piatnitca successfully passes her PhD comprehensive exam and is officially a PhD candidate. Congratulations!",
-    example: true
   },
   {
     date: "2026-08",

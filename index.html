@@ -920,8 +920,10 @@ document.querySelectorAll(".seg button[data-n]").forEach(b => b.addEventListener
 }));
 renderNews("all");
 
-/* Lab-life photos (entries live in content/photos.js); an empty photo shows an "Add photo" placeholder */
-const photos = LIST("photos").map(p => ({src: str(p.photo), n: str(p.caption), d: str(p.date), alt: p.alt}));
+/* Lab-life photos (entries live in content/photos.js); an empty photo shows an "Add photo" placeholder.
+   Shown newest first by date; undated photos keep their file order at the end */
+const photos = LIST("photos").map(p => ({src: str(p.photo), n: str(p.caption), d: str(p.date), alt: p.alt}))
+  .sort((a, b) => (b.d || "").localeCompare(a.d || ""));
 document.getElementById("gallery").innerHTML = photos.map((p,i) => `<li><figure class="shot">${p.src
     ? `<button data-shot="${i}" aria-label="View photo: ${esc(p.n)}"><img loading="lazy" src="${CDN}${p.src}" alt="${esc(p.alt || p.n)}"></button>`
     : `<div class="ph"><svg aria-hidden="true"><use href="#cam"/></svg><span class="ph-label">Add photo</span></div>`}

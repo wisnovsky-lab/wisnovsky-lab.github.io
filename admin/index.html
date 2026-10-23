@@ -268,7 +268,7 @@ const SECTIONS = {
     ]
   },
   photos: {
-    list: "photos", noun: "photo", add: "beforeEmpty", reorder: true,
+    list: "photos", noun: "photo", add: "beforeEmpty",
     title: p => p.caption, sub: p => p.photo ? esc(when(p.date) || "No date") : `<span class="badge ex">Empty placeholder</span>`, thumb: p => p.photo || null,
     fields: [
       {k: "photo", label: "Photo", type: "photo", req: true, max: [1600, 1600], file: v => `life-${v.date || thisYear}-${E.slugify(v.caption).slice(0, 40)}`},

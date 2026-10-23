@@ -33,7 +33,7 @@ LAB.photos = [
     date: "2026-08"
   },
   {
-    photo: "life-2025-11-congratulations-jimmy-msc.jpg",
+    photo: "life-2025-11-congratulations-jimmy-msc-2.jpg",
     caption: "Congratulations Jimmy, MSc!!",
     date: "2025-11"
   }

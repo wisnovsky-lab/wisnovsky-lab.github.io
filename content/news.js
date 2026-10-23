@@ -59,11 +59,10 @@ LAB.news = [
     linkText: "Read on bioRxiv"
   },
   {
-    date: "2025-10",
+    date: "2026-05",
     type: "event",
     title: "Lab members present at a glycobiology conference",
-    summary: "Placeholder for talks, posters and conference trips. Replace it with a real update or delete it.",
-    example: true
+    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 GlycoNet conference in Canmore, Alberta.",
   },
   {
     date: "2025-02",

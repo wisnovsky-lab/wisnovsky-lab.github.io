@@ -61,8 +61,8 @@ LAB.news = [
   {
     date: "2026-05",
     type: "event",
-    title: "Lab members present at a glycobiology conference",
-    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 GlycoNet conference in Canmore, Alberta.",
+    title: "Lab members present at Canadian Glycomics Symposium",
+    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 Canadian Glycomics Symposium in Canmore, Alberta.",
   },
   {
     date: "2025-02",

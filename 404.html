@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Wisnovsky Lab</title>
+<script>/* GitHub Pages shows this page for any address that doesn't exist, e.g. links to the old site.
+   Send visitors to the closest section of the new site instead of a dead end. */
+(function () {
+  var p = location.pathname.toLowerCase();
+  var to = "#/";
+  if (/join|position|career|opportunit/.test(p)) to = "#/join";
+  else if (/research|project/.test(p)) to = "#/research";
+  else if (/publication|paper/.test(p)) to = "#/publications";
+  else if (/news|blog|event/.test(p)) to = "#/news";
+  else if (/people|team|member|general|wisnovsky|phd|contact/.test(p)) to = "#/people";
+  location.replace("/" + to);
+})();
+</script>
+<style>
+  body { margin: 0; padding: 48px 16px; background: #fff; color: #111827; font: 17px/1.5 system-ui, sans-serif; text-align: center; }
+  a { color: #002145; }
+  @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } a { color: #9cc3ff; } }
+</style>
+</head>
+<body>
+  <p>This page has moved. <a href="/">Go to the Wisnovsky Lab homepage</a>.</p>
+</body>
+</html>

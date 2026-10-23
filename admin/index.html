@@ -30,6 +30,7 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
   header.top .name{font-weight:600}
   header.top .name span{color:var(--ink-3);font-weight:400}
   header.top .right{margin-left:auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:.94rem;color:var(--ink-3)}
+  header.top .right a{padding-block:12px}
   .test{background:var(--warn-bg);border-bottom:1px solid #e9d48a;font-size:.94rem}
   .test .wrap{padding-block:8px}
 
@@ -71,6 +72,8 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
   input[type=text],input[type=number],input[type=month],input[type=password],input[type=url],select,textarea{
     width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line-strong);border-radius:var(--radius);padding:9px 11px;min-height:44px}
   textarea{resize:vertical;line-height:1.45}
+  [aria-invalid="true"]{border-color:var(--err);box-shadow:0 0 0 1px var(--err)}
+  input[type=checkbox]{width:20px;height:20px;margin:0 8px 0 0;vertical-align:-4px;accent-color:var(--ubc)}
   .row{display:flex;gap:8px;align-items:stretch}
   .row > input{flex:1}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -120,7 +123,7 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
 <body>
 <header class="top">
   <div class="wrap">
-    <img src="../images/web/ubc-crest.png" alt="">
+    <img src="../images/web/ubc-crest.png" width="99" height="135" alt="">
     <div class="name">Wisnovsky Lab <span>website editor</span></div>
     <div class="right">
       <a href="../" target="_blank" rel="noopener">View the site</a>
@@ -149,15 +152,15 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
       </li>
       <li>Click <b>Generate token</b>, copy the token (it starts with <code>github_pat_</code>) and paste it below.</li>
     </ol>
-    <form id="tokenForm">
+    <form id="tokenForm" novalidate>
       <div class="field">
         <label for="token">Access token</label>
-        <input type="password" id="token" autocomplete="off" spellcheck="false" required>
-        <span class="hint">It stays in this browser and is only ever sent to GitHub.</span>
+        <input type="password" id="token" autocomplete="off" spellcheck="false" required aria-describedby="token-h">
+        <span class="hint" id="token-h">It stays in this browser and is only ever sent to GitHub.</span>
       </div>
       <div class="field"><label class="small"><input type="checkbox" id="remember" checked> Remember on this computer</label></div>
       <div class="actions"><button class="btn primary" id="connect">Connect</button></div>
-      <p class="inline-err" id="tokenErr" hidden></p>
+      <p class="inline-err" id="tokenErr" role="alert" hidden></p>
     </form>
     <p class="muted small" style="margin-top:28px">If GitHub says the token is waiting for approval, an owner of the organization can approve it under Organization settings → Personal access tokens → Pending requests.</p>
   </section>
@@ -252,7 +255,7 @@ const SECTIONS = {
       {k: "_group", label: "Group", type: "select", req: true, options: [["staff", "Postdoctoral fellows & staff"], ["students", "Graduate students"]]},
       {k: "name", label: "Name", req: true},
       {k: "role", label: "Role", req: true, list: ["PhD Candidate", "PhD Student", "MSc Student", "Postdoctoral Fellow", "Research Technician", "Research Associate", "Lab Manager"]},
-      {k: "photo", label: "Portrait", type: "photo", req: true, max: [800, 1000], file: v => `team-${E.slugify(v.name)}`, hint: "Shown cropped to a 4:5 portrait, so a head-and-shoulders photo works best."}
+      {k: "photo", label: "Portrait", type: "photo", req: true, max: [600, 750], aspect: 4 / 5, file: v => `team-${E.slugify(v.name)}`, hint: "Cropped from the centre to a 4:5 portrait, so a head-and-shoulders photo works best."}
     ]
   },
   alumni: {
@@ -301,11 +304,32 @@ function makeForm(secKey, mount) {
   form.className = "entry"; form.noValidate = true;
   form.innerHTML = `<div class="form-head"><h2>Add a ${sec.noun}</h2><button type="button" class="btn link" data-cancel hidden>Cancel editing</button></div>
     ${sec.fields.map(f => fieldHTML(f, `${secKey}-${f.k}`)).join("")}
-    <div class="actions"><button class="btn primary" data-save>Save</button></div><p class="inline-err" hidden></p>`;
+    <div class="actions"><button class="btn primary" data-save>Save</button></div><p class="inline-err" id="${secKey}-err" role="alert" hidden></p>`;
   mount.append(form);
   let editing = null, shrunk = {};
 
   const el = k => form.elements[k];
+  const errBox = form.querySelector(".inline-err");
+  function clearErrors() {
+    errBox.hidden = true; errBox.textContent = "";
+    form.querySelectorAll("[aria-invalid]").forEach(i => {
+      i.removeAttribute("aria-invalid");
+      i.setAttribute("aria-describedby", (i.getAttribute("aria-describedby") || "").replace(errBox.id, "").trim());
+      if (!i.getAttribute("aria-describedby")) i.removeAttribute("aria-describedby");
+    });
+  }
+  /* shows the message (read out by screen readers), marks the fields and moves focus to the first */
+  function fail(keys, msg) {
+    clearErrors();
+    errBox.hidden = false; errBox.textContent = msg;
+    const inputs = keys.map(k => el(k)).filter(Boolean);
+    inputs.forEach(i => {
+      i.setAttribute("aria-invalid", "true");
+      i.setAttribute("aria-describedby", ((i.getAttribute("aria-describedby") || "") + " " + errBox.id).trim());
+    });
+    if (inputs[0]) inputs[0].focus();
+  }
+  form.addEventListener("input", e => { if (e.target.getAttribute("aria-invalid")) { e.target.removeAttribute("aria-invalid"); } });
   const reset = () => {
     form.reset(); editing = null; shrunk = {};
     form.classList.remove("editing");
@@ -316,7 +340,7 @@ function makeForm(secKey, mount) {
     form.querySelectorAll(".photo-info").forEach(s => s.textContent = "");
     if (secKey === "news") el("date").value = thisMonth;
     if (el("year")) el("year").value = thisYear;
-    form.querySelector(".inline-err").hidden = true;
+    clearErrors();
   };
   const edit = (entry, listKey) => {
     reset(); editing = {entry, listKey};
@@ -331,7 +355,7 @@ function makeForm(secKey, mount) {
         if (v) { img.src = "../images/web/" + encodeURI(v); img.hidden = false; form.querySelector(".photo-info").textContent = "Current photo. Choose a file to replace it."; }
       } else if (el(f.k)) el(f.k).value = f.paragraphs && Array.isArray(v) ? v.join("\n\n") : (v ?? "");
     }
-    form.scrollIntoView({block: "start", behavior: "smooth"});
+    form.scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
     (form.querySelector("input:not([type=file]),textarea,select") || form).focus({preventScroll: true});
   };
   form.querySelector("[data-cancel]").onclick = reset;
@@ -343,7 +367,7 @@ function makeForm(secKey, mount) {
     if (!inp.files[0]) return;
     info.textContent = "Preparing photo…";
     try {
-      const s = await E.shrinkPhoto(inp.files[0], ...f.max);
+      const s = await E.shrinkPhoto(inp.files[0], ...f.max, f.aspect);
       shrunk[inp.name] = s; img.src = s.url; img.hidden = false;
       info.textContent = `Ready: ${s.width} × ${s.height} px, ${s.kb} KB.`;
     } catch (e) { info.textContent = ""; inp.value = ""; note("err", esc(e.message)); }
@@ -363,7 +387,7 @@ function makeForm(secKey, mount) {
 
   form.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const err = form.querySelector(".inline-err"); err.hidden = true;
+    clearErrors();
     const v = {};
     for (const f of sec.fields) {
       if (f.type === "photo") continue;
@@ -373,12 +397,11 @@ function makeForm(secKey, mount) {
       if (f.paragraphs) x = x ? x.split(/\n\s*\n/).map(s => s.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean) : [];
       v[f.k] = x;
     }
-    const missing = sec.fields.filter(f => f.req && (f.type === "photo" ? !(shrunk[f.k] || editing?.entry[f.k]) : v[f.k] === "" || v[f.k] == null))
-      .map(f => f.label.replace(/ \(optional\)/, ""));
-    if (missing.length) { err.textContent = "Please fill in: " + missing.join(", ") + "."; err.hidden = false; return; }
-    if (v.year && !/^(19|20)\d\d$/.test(String(v.year))) { err.textContent = "The year should look like " + thisYear + "."; err.hidden = false; return; }
-    if (v.date && !/^(19|20)\d\d(-(0[1-9]|1[0-2]))?$/.test(v.date)) { err.textContent = "The date should look like " + thisMonth + " (year-month) or just " + thisYear + "."; err.hidden = false; return; }
-    if (v.link && !/^(https?:\/\/|#\/|mailto:)/.test(v.link)) { err.textContent = "The button link should start with https:// (or #/ for a page on this site)."; err.hidden = false; return; }
+    const missing = sec.fields.filter(f => f.req && (f.type === "photo" ? !(shrunk[f.k] || editing?.entry[f.k]) : v[f.k] === "" || v[f.k] == null));
+    if (missing.length) return fail(missing.map(f => f.k), "Please fill in: " + missing.map(f => f.label.replace(/ \(optional\)/, "")).join(", ") + ".");
+    if (v.year && !/^(19|20)\d\d$/.test(String(v.year))) return fail(["year"], "The year should look like " + thisYear + ".");
+    if (v.date && !/^(19|20)\d\d(-(0[1-9]|1[0-2]))?$/.test(v.date)) return fail(["date"], "The date should look like " + thisMonth + " (year-month) or just " + thisYear + ".");
+    if (v.link && !/^(https?:\/\/|#\/|mailto:)/.test(v.link)) return fail(["link"], "The button link should start with https:// (or #/ for a page on this site).");
 
     const listKey = v._group || sec.list; delete v._group;
     const old = editing;
@@ -568,17 +591,25 @@ async function start(token, remember) {
 $("#tokenForm").addEventListener("submit", async e => {
   e.preventDefault();
   const t = $("#token").value.trim(), err = $("#tokenErr"); err.hidden = true;
-  if (!t) return;
+  $("#token").removeAttribute("aria-invalid");
+  if (!t) return tokenFail("Paste your access token first.");
   $("#connect").disabled = true;
   try { await start(t, $("#remember").checked); }
-  catch (ex) { err.textContent = friendly(ex); err.hidden = false; $("#signin").hidden = false; $("#app").hidden = true; }
+  catch (ex) { $("#signin").hidden = false; $("#app").hidden = true; tokenFail(friendly(ex)); }
   $("#connect").disabled = false;
 });
+function tokenFail(msg) {
+  const err = $("#tokenErr"), input = $("#token");
+  err.hidden = false; err.textContent = msg;
+  input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "token-h tokenErr");
+  input.focus();
+}
+$("#token").addEventListener("input", () => $("#token").removeAttribute("aria-invalid"));
 $("#signout").onclick = () => { store.clear(); location.reload(); };
 
 if (BRANCH !== "main") { $("#testbar").hidden = false; $("#testbar .wrap").textContent = `Test mode: changes are saved to the “${BRANCH}” branch, not the live website.`; }
 const saved0 = store.get();
-if (saved0) start(saved0).catch(ex => { $("#signin").hidden = false; $("#app").hidden = true; $("#tokenErr").textContent = friendly(ex); $("#tokenErr").hidden = false; $("#status").innerHTML = ""; });
+if (saved0) start(saved0).catch(ex => { $("#signin").hidden = false; $("#app").hidden = true; $("#status").innerHTML = ""; tokenFail(friendly(ex)); });
 else $("#signin").hidden = false;
 </script>
 </body>

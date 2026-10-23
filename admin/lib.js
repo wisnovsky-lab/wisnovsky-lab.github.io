@@ -131,21 +131,27 @@
 
   /* ---------- photos ---------- */
 
-  /* shrinks a photo in the browser: returns a JPEG as base64 plus a preview URL */
-  async function shrinkPhoto(file, maxW, maxH) {
+  /* shrinks a photo in the browser: returns a JPEG as base64 plus a preview URL.
+     With `aspect` (width / height), it first crops the centre to that shape. */
+  async function shrinkPhoto(file, maxW, maxH, aspect) {
     let bmp;
     try { bmp = await createImageBitmap(file, {imageOrientation: "from-image"}); }
     catch (e) {
       throw new Error("This photo couldn't be opened. iPhone HEIC photos need to be saved as JPEG first " +
         "(on a Mac: open in Preview, File → Export, choose JPEG).");
     }
-    const scale = Math.min(1, maxW / bmp.width, maxH / bmp.height);
-    const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+    let sx = 0, sy = 0, sw = bmp.width, sh = bmp.height;
+    if (aspect) {
+      if (sw / sh > aspect) { sw = Math.round(sh * aspect); sx = Math.round((bmp.width - sw) / 2); }
+      else { sh = Math.round(sw / aspect); sy = Math.round((bmp.height - sh) / 2); }
+    }
+    const scale = Math.min(1, maxW / sw, maxH / sh);
+    const w = Math.round(sw * scale), h = Math.round(sh * scale);
     const canvas = document.createElement("canvas");
     canvas.width = w; canvas.height = h;
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);   // transparent PNGs get a white background
-    ctx.drawImage(bmp, 0, 0, w, h);
+    ctx.drawImage(bmp, sx, sy, sw, sh, 0, 0, w, h);
     const blob = await new Promise(res => canvas.toBlob(res, "image/jpeg", 0.84));
     const base64 = await new Promise(res => {
       const fr = new FileReader();

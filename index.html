@@ -840,7 +840,8 @@ const card = m => `<li><img loading="lazy" src="${CDN}${m[2]}" alt="Portrait of 
 /* team photos are fetched in the background once the first page has finished loading,
    so they show instantly when People opens without slowing the first screen */
 addEventListener("load", () => {
-  const warm = () => [...staff, ...grad].forEach(m => { const img = new Image(); img.src = CDN + m[2]; });
+  const warm = () => ["wisnovskyseminarphoto-cropped.jpg", ...[...staff, ...grad].map(m => m[2]), ...photos.map(p => p.src)]
+    .filter(Boolean).forEach(f => { const img = new Image(); img.src = CDN + f; });
   "requestIdleCallback" in window ? requestIdleCallback(warm, {timeout: 2000}) : setTimeout(warm, 1000);
 });
 let peopleShown = false;

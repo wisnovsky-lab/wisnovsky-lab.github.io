@@ -62,7 +62,8 @@ LAB.news = [
     date: "2026-05",
     type: "event",
     title: "Lab members present at Canadian Glycomics Symposium",
-    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 Canadian Glycomics Symposium in Canmore, Alberta."
+    summary: "Anjali, Lidia, Angeline and Jimmy present their work at the 2026 Canadian Glycomics Symposium in Canmore, Alberta.",
+    photo: "news-2026-05-lab-members-present-at-canadian-glycomic.jpg"
   },
   {
     date: "2025-02",

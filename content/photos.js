@@ -26,5 +26,10 @@ LAB.photos = [
     photo: "life-2026-05-glynonet-canadian-glycomic-symposium-202.jpg",
     caption: "GlycoNet - Canadian Glycomic Symposium 2026",
     date: "2026-05"
+  },
+  {
+    photo: "life-2026-08-laser-tag-tournament-2026.jpg",
+    caption: "Laser Tag Tournament 2026",
+    date: "2026-08"
   }
 ];

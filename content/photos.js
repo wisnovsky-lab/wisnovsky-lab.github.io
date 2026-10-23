@@ -31,5 +31,10 @@ LAB.photos = [
     photo: "life-2026-08-laser-tag-tournament-2026.jpg",
     caption: "Laser Tag Tournament 2026",
     date: "2026-08"
+  },
+  {
+    photo: "life-2025-11-congratulations-jimmy-msc.jpg",
+    caption: "Congratulations Jimmy, MSc!!",
+    date: "2025-11"
   }
 ];

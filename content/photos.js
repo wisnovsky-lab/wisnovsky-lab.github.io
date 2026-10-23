@@ -14,7 +14,8 @@
 LAB.photos = [
   {
     photo: "Lab Bowling - 2025.jpeg",
-    caption: "Lab bowling retreat @ Grandview Bowling"
+    caption: "Lab bowling retreat @ Grandview Bowling",
+    date: "2025-02"
   },
   {
     photo: "life-2025-05-bmo-marathon-runners-2025.jpg",

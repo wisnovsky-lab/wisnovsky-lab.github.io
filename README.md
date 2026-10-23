@@ -1,7 +1,24 @@
 # Wisnovsky Lab website
 
-You can update the site from your browser. You don't need to install anything or know how to code.
-Everything you'd normally change lives in the **`content`** folder:
+## The easy way: the website editor
+
+Go to **[www.wisnovskylab.ca/admin/](https://www.wisnovskylab.ca/admin/)** and use the forms to:
+
+- **Add a publication.** Paste its DOI and click **Fill in**; the title, authors, journal and year fill themselves.
+- **Post news,** with an optional photo.
+- **Add or edit team members,** reorder them, or move someone to alumni.
+- **Add lab life photos.**
+
+Photos are shrunk to the right size automatically. Click **Save**, and the website updates about a minute later.
+
+The first time, the editor asks for a GitHub access token and shows how to make one (about 2 minutes). You need to be a member of the
+[wisnovsky-lab](https://github.com/wisnovsky-lab) organization on GitHub.
+
+---
+
+## Editing the files directly
+
+You can also edit the files on GitHub. Everything you'd normally change lives in the **`content`** folder:
 
 | To change… | Edit this file |
 |---|---|
@@ -146,6 +163,7 @@ If you have Node installed, `node tools/check-content.js` runs the same check Gi
 ## For whoever maintains the site
 
 - **Structure:** `index.html` holds the page layout, styles and code. It loads the four files in `content/`, which each fill in part of `window.LAB`.
+- **Editor:** `admin/` is the form-based editor. `admin/lib.js` reads and rewrites the content files and saves through the GitHub API, one commit per change, as the signed-in person. Add `?branch=some-branch` to the editor's address to try it out without touching the live site.
 - **Hosting:** GitHub Pages from the `main` branch, root folder.
 - **Launching:** the repo is private and the site is offline until launch. To launch:
   1. Rename the repo to `wisnovsky-lab.github.io`.

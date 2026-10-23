@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Website editor — Wisnovsky Lab</title>
+<link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+  :root{
+    --ink:#0f1a26; --ink-2:#2e3a46; --ink-3:#5f6a75; --line:#d9dee3; --line-strong:#868f98; --wash:#f4f6f8;
+    --ubc:#002145; --link:#0055b7; --ok:#1f6f3d; --ok-bg:#e8f4ec; --err:#a4262c; --err-bg:#fbeaea; --warn-bg:#fff6dc;
+    --radius:6px; --font:"Atkinson Hyperlegible Next",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:#fff;color:var(--ink);font:16px/1.55 var(--font)}
+  a{color:var(--link)}
+  :focus-visible{outline:3px solid var(--link);outline-offset:2px}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+
+  header.top{border-bottom:1px solid var(--line);background:#fff}
+  header.top .wrap{display:flex;align-items:center;gap:12px;min-height:64px;flex-wrap:wrap;padding-block:8px}
+  header.top img{width:28px;height:auto}
+  header.top .name{font-weight:600}
+  header.top .name span{color:var(--ink-3);font-weight:400}
+  header.top .right{margin-left:auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:.94rem;color:var(--ink-3)}
+  .test{background:var(--warn-bg);border-bottom:1px solid #e9d48a;font-size:.94rem}
+  .test .wrap{padding-block:8px}
+
+  h1{font-size:1.9rem;line-height:1.2;margin:40px 0 8px;text-wrap:balance}
+  h2{font-size:1.3rem;margin:0 0 4px}
+  h3{font-size:1.05rem;margin:28px 0 10px}
+  .lede{color:var(--ink-2);max-width:62ch;margin:0 0 28px}
+  .muted{color:var(--ink-3)}
+  .small{font-size:.9rem}
+
+  /* sign-in */
+  .signin{max-width:680px;padding-bottom:64px}
+  .steps{padding-left:1.3em;margin:0 0 24px}
+  .steps li{margin-bottom:10px}
+  .steps b{font-weight:600}
+  code{font-size:.9em;background:var(--wash);padding:1px 5px;border-radius:4px}
+
+  /* tabs */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:8px 0 28px;overflow-x:auto}
+  .tabs button{font:inherit;font-weight:500;background:none;border:0;border-bottom:3px solid transparent;padding:12px 14px;color:var(--ink-3);cursor:pointer;white-space:nowrap;min-height:44px}
+  .tabs button[aria-selected="true"]{color:var(--ubc);border-bottom-color:var(--ubc)}
+  .tabs button:hover{color:var(--ink)}
+
+  .panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start;padding-bottom:80px}
+  .panel > *{min-width:0}
+  @media (max-width:860px){ .panel{grid-template-columns:minmax(0,1fr)} }
+
+  /* forms */
+  form.entry{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:#fff;position:sticky;top:16px}
+  @media (max-width:860px){ form.entry{position:static} }
+  .form-col{display:grid;gap:24px}
+  .form-col:has(form + form) form.entry{position:static}
+  form.entry.editing{border-color:var(--link);box-shadow:0 0 0 1px var(--link)}
+  .form-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+  .field{margin-bottom:14px}
+  .field label,.field .label{display:block;font-weight:500;margin-bottom:4px}
+  .field .hint{display:block;color:var(--ink-3);font-size:.88rem;margin-top:3px}
+  .req{color:var(--err);margin-left:2px}
+  input[type=text],input[type=number],input[type=month],input[type=password],input[type=url],select,textarea{
+    width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line-strong);border-radius:var(--radius);padding:9px 11px;min-height:44px}
+  textarea{resize:vertical;line-height:1.45}
+  .row{display:flex;gap:8px;align-items:stretch}
+  .row > input{flex:1}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:480px){ .two{grid-template-columns:1fr} }
+  .photo-pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .photo-pick img{width:96px;height:72px;object-fit:cover;border-radius:4px;border:1px solid var(--line);background:var(--wash)}
+  .photo-pick input[type=file]{font:inherit;font-size:.92rem;max-width:100%}
+
+  .btn{font:inherit;font-weight:500;border-radius:var(--radius);padding:9px 16px;min-height:44px;cursor:pointer;border:1px solid var(--line-strong);background:#fff;color:var(--ink)}
+  .btn:hover{background:var(--wash)}
+  .btn.primary{background:var(--ubc);border-color:var(--ubc);color:#fff}
+  .btn.primary:hover{background:#0b3566}
+  .btn.link{border:0;background:none;color:var(--link);padding:4px 6px;min-height:36px}
+  .btn.link:hover{text-decoration:underline;background:none}
+  .btn.danger{color:var(--err)}
+  .btn:disabled{opacity:.55;cursor:progress}
+  .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+
+  /* lists */
+  .list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+  .search{max-width:260px}
+  ul.entries{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  ul.entries li{padding:12px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+  ul.entries .t{font-weight:500;overflow-wrap:anywhere}
+  ul.entries .s{color:var(--ink-3);font-size:.9rem;grid-column:1}
+  ul.entries .ops{grid-row:1 / span 2;grid-column:2;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:0 2px}
+  ul.entries li.has-thumb{grid-template-columns:56px minmax(0,1fr) auto}
+  ul.entries li.has-thumb .thumb{grid-row:1 / span 2;width:56px;height:56px;object-fit:cover;border-radius:4px;background:var(--wash)}
+  ul.entries li.has-thumb .s{grid-column:2}
+  ul.entries li.has-thumb .ops{grid-column:3}
+  .badge{display:inline-block;font-size:.78rem;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--wash);color:var(--ink-2);margin-right:6px;vertical-align:1px}
+  .badge.ex{background:var(--warn-bg)}
+  .move{grid-column:1 / -1;background:var(--wash);border-radius:var(--radius);padding:12px;margin-top:6px}
+
+  /* status */
+  #status{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:min(560px,calc(100% - 32px));z-index:10}
+  .note{border-radius:var(--radius);padding:12px 16px;box-shadow:0 8px 24px -10px rgba(15,26,38,.35);display:flex;gap:12px;align-items:flex-start}
+  .note.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #b9dcc5}
+  .note.err{background:var(--err-bg);color:var(--err);border:1px solid #efc2c4}
+  .note.busy{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .note p{margin:0;flex:1}
+  .note button{font:inherit;background:none;border:0;color:inherit;cursor:pointer;padding:0 4px;font-size:1.2rem;line-height:1}
+  .inline-err{color:var(--err);font-size:.92rem;margin:8px 0 0}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="../images/web/ubc-crest.png" alt="">
+    <div class="name">Wisnovsky Lab <span>website editor</span></div>
+    <div class="right">
+      <a href="../" target="_blank" rel="noopener">View the site</a>
+      <span id="who" hidden></span>
+      <button class="btn link" id="signout" hidden>Sign out</button>
+    </div>
+  </div>
+</header>
+<div class="test" id="testbar" hidden><div class="wrap"></div></div>
+
+<main class="wrap">
+  <!-- sign in -->
+  <section class="signin" id="signin" hidden>
+    <h1>Connect to GitHub</h1>
+    <p class="lede">Changes you make here are saved straight to the website. To do that, this page needs a GitHub access token. You only set it up once on each computer.</p>
+    <ol class="steps">
+      <li>You need a GitHub account that's a member of the <b>wisnovsky-lab</b> organization. Ask a lab owner to invite you if you aren't one yet.</li>
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub's new token page</a> and fill it in:
+        <ul>
+          <li><b>Token name:</b> <code>Lab website editor</code></li>
+          <li><b>Resource owner:</b> <code>wisnovsky-lab</code></li>
+          <li><b>Expiration:</b> 1 year is fine</li>
+          <li><b>Repository access:</b> Only select repositories → <code>wisnovsky-lab.github.io</code></li>
+          <li><b>Permissions:</b> Repository permissions → <b>Contents</b> → <b>Read and write</b></li>
+        </ul>
+      </li>
+      <li>Click <b>Generate token</b>, copy the token (it starts with <code>github_pat_</code>) and paste it below.</li>
+    </ol>
+    <form id="tokenForm">
+      <div class="field">
+        <label for="token">Access token</label>
+        <input type="password" id="token" autocomplete="off" spellcheck="false" required>
+        <span class="hint">It stays in this browser and is only ever sent to GitHub.</span>
+      </div>
+      <div class="field"><label class="small"><input type="checkbox" id="remember" checked> Remember on this computer</label></div>
+      <div class="actions"><button class="btn primary" id="connect">Connect</button></div>
+      <p class="inline-err" id="tokenErr" hidden></p>
+    </form>
+    <p class="muted small" style="margin-top:28px">If GitHub says the token is waiting for approval, an owner of the organization can approve it under Organization settings → Personal access tokens → Pending requests.</p>
+  </section>
+
+  <!-- editor -->
+  <section id="app" hidden>
+    <h1>Update the website</h1>
+    <p class="lede">Add or change an entry and click Save. The website updates about a minute later.</p>
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-publications" aria-controls="p-publications" aria-selected="true">Publications</button>
+      <button role="tab" id="tab-news" aria-controls="p-news" aria-selected="false" tabindex="-1">News</button>
+      <button role="tab" id="tab-people" aria-controls="p-people" aria-selected="false" tabindex="-1">People</button>
+      <button role="tab" id="tab-photos" aria-controls="p-photos" aria-selected="false" tabindex="-1">Lab life</button>
+    </div>
+    <div role="tabpanel" id="p-publications" aria-labelledby="tab-publications"></div>
+    <div role="tabpanel" id="p-news" aria-labelledby="tab-news" hidden></div>
+    <div role="tabpanel" id="p-people" aria-labelledby="tab-people" hidden></div>
+    <div role="tabpanel" id="p-photos" aria-labelledby="tab-photos" hidden></div>
+  </section>
+</main>
+<div id="status" role="status" aria-live="polite"></div>
+
+<script src="lib.js"></script>
+<script>
+"use strict";
+const E = window.Editor;
+const BRANCH = new URLSearchParams(location.search).get("branch") || "main";
+const KEY = "wl-editor-token";
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const store = {
+  get() { try { return localStorage.getItem(KEY) || sessionStorage.getItem(KEY); } catch { return null; } },
+  set(t, remember) { try { (remember ? localStorage : sessionStorage).setItem(KEY, t); } catch {} },
+  clear() { try { localStorage.removeItem(KEY); sessionStorage.removeItem(KEY); } catch {} }
+};
+let gh = null;
+const files = {};   // path -> latest text
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const when = d => { const [y, m] = String(d || "").split("-"); return m ? `${MONTHS[m - 1]} ${y}` : (y || ""); };
+const thisYear = new Date().getFullYear();
+const thisMonth = new Date().toISOString().slice(0, 7);
+
+/* ---------- status messages ---------- */
+function note(kind, html, keep) {
+  const box = $("#status");
+  box.innerHTML = `<div class="note ${kind}"><p>${html}</p>${kind === "busy" ? "" : `<button aria-label="Dismiss">×</button>`}</div>`;
+  const b = box.querySelector("button"); if (b) b.onclick = () => box.innerHTML = "";
+  clearTimeout(note.t);
+  if (kind === "ok") note.t = setTimeout(() => box.innerHTML = "", keep ? 20000 : 12000);
+}
+const friendly = e => e.status === 401 ? "GitHub didn't accept the access token. It may have expired: sign out and connect again with a new one."
+  : e.status === 403 || e.status === 404 ? "This token can't change the website. Check it has Contents: Read and write for wisnovsky-lab.github.io (and that an organization owner approved it)."
+  : e.message || String(e);
+
+/* ---------- forms ---------- */
+const SECTIONS = {
+  publications: {
+    list: "publications", noun: "publication", add: "start", searchable: true,
+    title: p => p.title, sub: p => `<span class="badge">${({lab: "Lab", preprint: "Preprint", postdoc: "Postdoc", phd: "PhD"})[p.type] || p.type}</span>${esc(p.year)} · ${esc(p.journal)}`,
+    fields: [
+      {k: "doi", label: "DOI", hint: "Paste the DOI or doi.org link, then click Fill in. The other fields fill themselves; check them before saving.", doi: true},
+      {k: "type", label: "List", type: "select", req: true, options: [["lab", "Lab publications"], ["preprint", "Preprints"], ["postdoc", "Postdoctoral publications"], ["phd", "PhD publications"]]},
+      {k: "year", label: "Year", type: "number", req: true},
+      {k: "title", label: "Title", type: "textarea", rows: 2, req: true},
+      {k: "authors", label: "Authors", type: "textarea", rows: 3, req: true, hint: "Separated by commas. Simon's name is bolded automatically."},
+      {k: "journal", label: "Journal", req: true},
+      {k: "details", label: "Volume, pages", hint: "For example 6(8), 101507. Leave blank if it isn't in an issue yet."}
+    ]
+  },
+  news: {
+    list: "news", noun: "news post", add: "start", searchable: true,
+    title: n => n.title, sub: n => `<span class="badge">${esc(n.label || n.type)}</span>${n.example ? `<span class="badge ex">Example</span>` : ""}${esc(when(n.date))}`,
+    thumb: n => n.photo,
+    fields: [
+      {k: "date", label: "Date", type: "date", req: true, hint: "Year and month, like 2026-10. A year on its own also works."},
+      {k: "type", label: "Type", type: "select", req: true, options: [["paper", "Paper"], ["milestone", "Milestone (comps, defences, graduations)"], ["award", "Award"], ["event", "Event"]]},
+      {k: "title", label: "Headline", req: true},
+      {k: "summary", label: "Summary", type: "textarea", rows: 3, req: true, hint: "One or two sentences, shown on the news card."},
+      {k: "body", label: "Full post (optional)", type: "textarea", rows: 6, paragraphs: true, hint: "Longer text for the post's own page. Leave a blank line between paragraphs. If empty, the summary is shown."},
+      {k: "photo", label: "Photo (optional)", type: "photo", max: [1600, 1600], file: v => `news-${v.date}-${E.slugify(v.title).slice(0, 40)}`},
+      {k: "photoAlt", label: "Photo description", hint: "A few words describing the photo, for people using screen readers."},
+      {k: "link", label: "Button link (optional)", type: "url", hint: "A web address, or #/publications for the Publications page."},
+      {k: "linkText", label: "Button text", hint: "For example: Read the paper"},
+      {k: "label", label: "Tag text (optional)", hint: "Replaces the type on the tag, for example Preprint."}
+    ]
+  },
+  people: {
+    list: "staff", noun: "team member", add: "end", groups: [["staff", "Postdoctoral fellows & staff"], ["students", "Graduate students"]],
+    title: m => m.name, sub: m => esc(m.role), thumb: m => m.photo, reorder: true, alumni: true,
+    fields: [
+      {k: "_group", label: "Group", type: "select", req: true, options: [["staff", "Postdoctoral fellows & staff"], ["students", "Graduate students"]]},
+      {k: "name", label: "Name", req: true},
+      {k: "role", label: "Role", req: true, list: ["PhD Candidate", "PhD Student", "MSc Student", "Postdoctoral Fellow", "Research Technician", "Research Associate", "Lab Manager"]},
+      {k: "photo", label: "Portrait", type: "photo", req: true, max: [800, 1000], file: v => `team-${E.slugify(v.name)}`, hint: "Shown cropped to a 4:5 portrait, so a head-and-shoulders photo works best."}
+    ]
+  },
+  alumni: {
+    list: "alumni", noun: "alumni entry", add: "start",
+    title: a => a.name, sub: a => `${esc(a.inLab)}${a.nowAt ? " · now " + esc(a.nowAt) : ""}`,
+    fields: [
+      {k: "name", label: "Name", req: true},
+      {k: "inLab", label: "In the lab", req: true, hint: "Role and years, for example MSc, 2024 or Co-op research technician, 2025–2026."},
+      {k: "nowAt", label: "Now", hint: "For example PhD, Medical Biophysics, University of Toronto"}
+    ]
+  },
+  photos: {
+    list: "photos", noun: "photo", add: "beforeEmpty", reorder: true,
+    title: p => p.caption, sub: p => p.photo ? esc(when(p.date) || "No date") : `<span class="badge ex">Empty placeholder</span>`, thumb: p => p.photo || null,
+    fields: [
+      {k: "photo", label: "Photo", type: "photo", req: true, max: [1600, 1600], file: v => `life-${v.date || thisYear}-${E.slugify(v.caption).slice(0, 40)}`},
+      {k: "caption", label: "Caption", req: true},
+      {k: "date", label: "Date (optional)", type: "date", hint: "Year and month, like 2026-10."},
+      {k: "alt", label: "Photo description", hint: "A few words describing the photo, for people using screen readers."}
+    ]
+  }
+};
+const listFile = key => E.LISTS[key].file;
+const list = key => { try { return E.readList(files[listFile(key)], key); } catch (e) { return null; } };
+
+function fieldHTML(f, id) {
+  const req = f.req ? `<span class="req" aria-hidden="true">*</span>` : "";
+  const hint = f.hint ? `<span class="hint" id="${id}-h">${esc(f.hint)}</span>` : "";
+  const desc = f.hint ? ` aria-describedby="${id}-h"` : "";
+  const r = f.req && f.type !== "photo" ? " required" : "";
+  let input;
+  if (f.type === "select") input = `<select id="${id}" name="${f.k}"${r}${desc}>${f.options.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select>`;
+  else if (f.type === "textarea") input = `<textarea id="${id}" name="${f.k}" rows="${f.rows || 3}"${r}${desc}></textarea>`;
+  else if (f.type === "photo") return `<div class="field"><span class="label" id="${id}-l">${esc(f.label)}${req}</span>
+      <div class="photo-pick"><img alt="" hidden><input type="file" id="${id}" name="${f.k}" accept="image/*" aria-labelledby="${id}-l"${desc}></div>
+      <span class="hint photo-info"></span>${hint}</div>`;
+  else if (f.doi) input = `<div class="row"><input type="text" id="${id}" name="${f.k}" inputmode="url" spellcheck="false"${desc}><button type="button" class="btn" data-fill>Fill in</button></div>`;
+  else input = `<input type="${f.type === "number" ? "number" : "text"}" id="${id}" name="${f.k}"${f.type === "date" ? ' placeholder="2026-10" pattern="\\d{4}(-\\d{2})?"' : ""}${f.type === "number" ? ' min="1990" max="2100"' : ""}${f.list ? ` list="${id}-list"` : ""}${r}${desc}>${f.list ? `<datalist id="${id}-list">${f.list.map(o => `<option value="${esc(o)}">`).join("")}</datalist>` : ""}`;
+  return `<div class="field"><label for="${id}">${esc(f.label)}${req}</label>${input}${hint}</div>`;
+}
+
+/* builds one add/edit form; returns helpers to fill it for editing */
+function makeForm(secKey, mount) {
+  const sec = SECTIONS[secKey];
+  const form = document.createElement("form");
+  form.className = "entry"; form.noValidate = true;
+  form.innerHTML = `<div class="form-head"><h2>Add a ${sec.noun}</h2><button type="button" class="btn link" data-cancel hidden>Cancel editing</button></div>
+    ${sec.fields.map(f => fieldHTML(f, `${secKey}-${f.k}`)).join("")}
+    <div class="actions"><button class="btn primary" data-save>Save</button></div><p class="inline-err" hidden></p>`;
+  mount.append(form);
+  let editing = null, shrunk = {};
+
+  const el = k => form.elements[k];
+  const reset = () => {
+    form.reset(); editing = null; shrunk = {};
+    form.classList.remove("editing");
+    form.querySelector("h2").textContent = `Add a ${sec.noun}`;
+    form.querySelector("[data-cancel]").hidden = true;
+    form.querySelector("[data-save]").textContent = "Save";
+    form.querySelectorAll(".photo-pick img").forEach(i => { i.hidden = true; i.removeAttribute("src"); });
+    form.querySelectorAll(".photo-info").forEach(s => s.textContent = "");
+    if (secKey === "news") el("date").value = thisMonth;
+    if (el("year")) el("year").value = thisYear;
+    form.querySelector(".inline-err").hidden = true;
+  };
+  const edit = (entry, listKey) => {
+    reset(); editing = {entry, listKey};
+    form.classList.add("editing");
+    form.querySelector("h2").textContent = `Edit ${sec.noun}`;
+    form.querySelector("[data-cancel]").hidden = false;
+    form.querySelector("[data-save]").textContent = "Save changes";
+    for (const f of sec.fields) {
+      const v = f.k === "_group" ? listKey : entry[f.k];
+      if (f.type === "photo") {
+        const img = form.querySelector(".photo-pick img");
+        if (v) { img.src = "../images/web/" + encodeURI(v); img.hidden = false; form.querySelector(".photo-info").textContent = "Current photo. Choose a file to replace it."; }
+      } else if (el(f.k)) el(f.k).value = f.paragraphs && Array.isArray(v) ? v.join("\n\n") : (v ?? "");
+    }
+    form.scrollIntoView({block: "start", behavior: "smooth"});
+    (form.querySelector("input:not([type=file]),textarea,select") || form).focus({preventScroll: true});
+  };
+  form.querySelector("[data-cancel]").onclick = reset;
+
+  form.querySelectorAll("input[type=file]").forEach(inp => inp.addEventListener("change", async () => {
+    const f = sec.fields.find(x => x.k === inp.name), wrap = inp.closest(".field");
+    const img = wrap.querySelector("img"), info = wrap.querySelector(".photo-info");
+    delete shrunk[inp.name];
+    if (!inp.files[0]) return;
+    info.textContent = "Preparing photo…";
+    try {
+      const s = await E.shrinkPhoto(inp.files[0], ...f.max);
+      shrunk[inp.name] = s; img.src = s.url; img.hidden = false;
+      info.textContent = `Ready: ${s.width} × ${s.height} px, ${s.kb} KB.`;
+    } catch (e) { info.textContent = ""; inp.value = ""; note("err", esc(e.message)); }
+  }));
+
+  const fill = form.querySelector("[data-fill]");
+  if (fill) fill.onclick = async () => {
+    fill.disabled = true; fill.textContent = "Looking up…";
+    try {
+      const p = await E.lookupDoi(el("doi").value);
+      for (const k of ["type", "year", "title", "authors", "journal", "details", "doi"]) if (el(k)) el(k).value = p[k] ?? "";
+      note("ok", "Filled in from the DOI. Check the details, then click Save.");
+      el("title").focus();
+    } catch (e) { note("err", esc(e.message)); }
+    fill.disabled = false; fill.textContent = "Fill in";
+  };
+
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const err = form.querySelector(".inline-err"); err.hidden = true;
+    const v = {};
+    for (const f of sec.fields) {
+      if (f.type === "photo") continue;
+      let x = el(f.k).value.trim();
+      if (f.k === "year") x = x ? Number(x) : "";
+      if (f.k === "doi" && x && !/^https?:/.test(x)) x = "https://doi.org/" + E.cleanDoi(x);
+      if (f.paragraphs) x = x ? x.split(/\n\s*\n/).map(s => s.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean) : [];
+      v[f.k] = x;
+    }
+    const missing = sec.fields.filter(f => f.req && (f.type === "photo" ? !(shrunk[f.k] || editing?.entry[f.k]) : v[f.k] === "" || v[f.k] == null))
+      .map(f => f.label.replace(/ \(optional\)/, ""));
+    if (missing.length) { err.textContent = "Please fill in: " + missing.join(", ") + "."; err.hidden = false; return; }
+    if (v.year && !/^(19|20)\d\d$/.test(String(v.year))) { err.textContent = "The year should look like " + thisYear + "."; err.hidden = false; return; }
+    if (v.date && !/^(19|20)\d\d(-(0[1-9]|1[0-2]))?$/.test(v.date)) { err.textContent = "The date should look like " + thisMonth + " (year-month) or just " + thisYear + "."; err.hidden = false; return; }
+    if (v.link && !/^(https?:\/\/|#\/|mailto:)/.test(v.link)) { err.textContent = "The button link should start with https:// (or #/ for a page on this site)."; err.hidden = false; return; }
+
+    const listKey = v._group || sec.list; delete v._group;
+    const old = editing;
+    const entry = {...(old ? old.entry : {}), ...v};
+    if (secKey === "news") delete entry.example;   // a real post replaces a placeholder
+    const label = entry.title || entry.name || entry.caption;
+    const btn = form.querySelector("[data-save]"); btn.disabled = true;
+    note("busy", "Saving…");
+    try {
+      // pick file names for new photos, never overwriting an existing file
+      const uploads = [];
+      for (const f of sec.fields.filter(f => f.type === "photo" && shrunk[f.k])) {
+        let name = f.file(entry) + ".jpg", n = 2;
+        while (await gh.exists("images/web/" + name)) name = f.file(entry) + "-" + n++ + ".jpg";
+        entry[f.k] = name;
+        uploads.push({path: "images/web/" + name, base64: shrunk[f.k].base64});
+      }
+      const file = listFile(listKey);
+      const commit = await gh.save(`${old ? "Update" : "Add"} ${sec.noun}: ${label}`, async read => {
+        let src = await read(file);
+        let target = E.readList(src, listKey);
+        if (old) {
+          const from = E.readList(src, old.listKey);
+          const i = from.findIndex(x => JSON.stringify(x) === JSON.stringify(old.entry));
+          if (i < 0) throw new Error("Someone changed this entry since you opened it. Reload the page and try again.");
+          if (old.listKey === listKey) { from[i] = entry; return [...uploads, {path: file, text: E.writeList(src, listKey, from)}]; }
+          from.splice(i, 1); src = E.writeList(src, old.listKey, from); target = E.readList(src, listKey);
+        }
+        if (sec.add === "start") target.unshift(entry);
+        else if (sec.add === "beforeEmpty") { const j = target.findIndex(x => !x.photo); j < 0 ? target.push(entry) : target.splice(j, 0, entry); }
+        else target.push(entry);
+        return [...uploads, {path: file, text: E.writeList(src, listKey, target)}];
+      });
+      await refresh(commit.sha);
+      reset();
+      saved(commit, `${old ? "Saved changes to" : "Added"} “${esc(label)}”.`);
+    } catch (e) { note("err", esc(friendly(e))); }
+    btn.disabled = false;
+  });
+  reset();
+  return {edit, reset};
+}
+
+function saved(commit, what) {
+  note("ok", `${what} The website will show it in about a minute. <a href="${commit.html_url}" target="_blank" rel="noopener">See the change on GitHub</a>`, true);
+}
+
+/* one-click changes to a list (delete, move up/down, move to alumni) */
+async function change(message, file, fn) {
+  note("busy", "Saving…");
+  try {
+    const commit = await gh.save(message, async read => [{path: file, text: fn(await read(file))}]);
+    await refresh(commit.sha);
+    saved(commit, esc(message) + ".");
+  } catch (e) { note("err", esc(friendly(e))); }
+}
+const indexOf = (arr, entry) => {
+  const i = arr.findIndex(x => JSON.stringify(x) === JSON.stringify(entry));
+  if (i < 0) throw new Error("Someone changed this list since you opened it. Reload the page and try again.");
+  return i;
+};
+
+/* ---------- lists ---------- */
+function renderList(secKey, mount, form, listKey = SECTIONS[secKey].list, heading) {
+  const sec = SECTIONS[secKey], items = list(listKey);
+  const wrap = document.createElement("div");
+  const total = items ? items.length : 0;
+  wrap.innerHTML = `<div class="list-head"><h${heading ? 3 : 2}>${esc(heading || "On the site now")} <span class="muted small">(${total})</span></h${heading ? 3 : 2}>
+    ${sec.searchable ? `<input type="text" class="search" placeholder="Search" aria-label="Search ${esc(sec.noun)}s">` : ""}</div>
+    ${items ? "" : `<p class="inline-err">${esc(listFile(listKey))} has a typo, so it can't be shown here. Fix it on GitHub first (the content check email says where).</p>`}
+    <ul class="entries"></ul>`;
+  mount.append(wrap);
+  const ul = wrap.querySelector("ul");
+  (items || []).forEach((it, i) => {
+    const li = document.createElement("li");
+    const th = sec.thumb ? sec.thumb(it) : undefined;
+    const showThumb = sec.thumb && (th || secKey !== "news");   // news posts without a photo don't need an empty box
+    if (showThumb) li.className = "has-thumb";
+    li.dataset.text = JSON.stringify(it).toLowerCase();
+    li.innerHTML = `${showThumb ? (th ? `<img class="thumb" loading="lazy" src="../images/web/${encodeURI(th)}" alt="">` : `<span class="thumb"></span>`) : ""}
+      <span class="t">${esc(sec.title(it))}</span><span class="s">${sec.sub(it)}</span>
+      <span class="ops">
+        <button class="btn link" data-op="edit">Edit</button>
+        ${sec.reorder ? `<button class="btn link" data-op="up" ${i === 0 ? "disabled" : ""} aria-label="Move ${esc(sec.title(it))} up">↑</button><button class="btn link" data-op="down" ${i === total - 1 ? "disabled" : ""} aria-label="Move ${esc(sec.title(it))} down">↓</button>` : ""}
+        ${sec.alumni ? `<button class="btn link" data-op="alum">Move to alumni</button>` : ""}
+        <button class="btn link danger" data-op="del">Delete</button>
+      </span>`;
+    li.querySelector(".ops").addEventListener("click", ev => {
+      const op = ev.target.closest("button")?.dataset.op; if (!op) return;
+      const file = listFile(listKey), name = sec.title(it);
+      if (op === "edit") form.edit(it, listKey);
+      if (op === "del" && confirm(`Delete “${name}” from the website?`))
+        change(`Delete ${sec.noun}: ${name}`, file, src => { const a = E.readList(src, listKey); a.splice(indexOf(a, it), 1); return E.writeList(src, listKey, a); });
+      if (op === "up" || op === "down")
+        change(`Move ${name} ${op}`, file, src => {
+          const a = E.readList(src, listKey), j = indexOf(a, it), k = op === "up" ? j - 1 : j + 1;
+          if (k < 0 || k >= a.length) return src;
+          [a[j], a[k]] = [a[k], a[j]]; return E.writeList(src, listKey, a);
+        });
+      if (op === "alum") moveToAlumni(li, it, listKey);
+    });
+    ul.append(li);
+  });
+  const search = wrap.querySelector(".search");
+  if (search) search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    ul.querySelectorAll("li").forEach(li => li.hidden = q && !li.dataset.text.includes(q));
+  });
+}
+
+function moveToAlumni(li, person, fromKey) {
+  if (li.querySelector(".move")) return;
+  const box = document.createElement("form");
+  box.className = "move"; box.noValidate = true;
+  const id = "mv" + Math.random().toString(36).slice(2, 7);
+  box.innerHTML = `<div class="two">
+      <div class="field"><label for="${id}a">In the lab<span class="req" aria-hidden="true">*</span></label><input type="text" id="${id}a" value="${esc(person.role)}, ${thisYear}" required></div>
+      <div class="field"><label for="${id}b">Now</label><input type="text" id="${id}b" placeholder="e.g. PhD, University of Toronto"></div>
+    </div><div class="actions"><button class="btn primary">Move to alumni</button><button type="button" class="btn link" data-x>Cancel</button></div>`;
+  li.append(box);
+  box.querySelector("[data-x]").onclick = () => box.remove();
+  box.querySelector("input").focus();
+  box.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const inLab = box.querySelector(`#${id}a`).value.trim(), nowAt = box.querySelector(`#${id}b`).value.trim();
+    if (!inLab) return box.querySelector(`#${id}a`).focus();
+    change(`Move ${person.name} to alumni`, "content/people.js", src => {
+      const a = E.readList(src, fromKey); a.splice(indexOf(a, person), 1);
+      src = E.writeList(src, fromKey, a);
+      const al = E.readList(src, "alumni"); al.unshift({name: person.name, inLab, nowAt});
+      return E.writeList(src, "alumni", al);
+    });
+  });
+}
+
+/* ---------- panels ---------- */
+function render() {
+  for (const p of ["publications", "news", "people", "photos"]) {
+    const mount = $("#p-" + p);
+    mount.innerHTML = `<div class="panel"><div class="form-col"></div><div class="list-col"></div></div>`;
+    const formCol = mount.querySelector(".form-col"), listCol = mount.querySelector(".list-col");
+    if (p === "people") {
+      const f = makeForm("people", formCol);
+      const af = makeForm("alumni", formCol);
+      listCol.innerHTML = `<h2>On the site now</h2>`;
+      renderList("people", listCol, f, "staff", "Postdoctoral fellows & staff");
+      renderList("people", listCol, f, "students", "Graduate students");
+      renderList("alumni", listCol, af, "alumni", "Alumni");
+    } else renderList(p, listCol, makeForm(p, formCol));
+  }
+}
+
+async function refresh(ref) {
+  const paths = [...new Set(Object.values(E.LISTS).map(l => l.file))];
+  const texts = await Promise.all(paths.map(p => gh.readText(p, ref)));
+  paths.forEach((p, i) => files[p] = texts[i]);
+  render();
+}
+
+/* tabs */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(t, focus) {
+  tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; $("#" + x.getAttribute("aria-controls")).hidden = !on; });
+  if (focus) t.focus();
+  try { sessionStorage.setItem("wl-editor-tab", t.id); } catch {}
+}
+tabs.forEach((t, i) => {
+  t.onclick = () => selectTab(t);
+  t.onkeydown = e => {
+    const k = {ArrowRight: 1, ArrowLeft: -1}[e.key]; if (!k) return;
+    selectTab(tabs[(i + k + tabs.length) % tabs.length], true);
+  };
+});
+try { const saved = sessionStorage.getItem("wl-editor-tab"); if (saved && $("#" + saved)) selectTab($("#" + saved)); } catch {}
+
+/* ---------- sign in ---------- */
+async function start(token, remember) {
+  gh = E.GitHub(token, BRANCH);
+  const login = await gh.whoami();
+  if (remember !== undefined) store.set(token, remember);
+  $("#who").textContent = "Signed in as " + login; $("#who").hidden = false; $("#signout").hidden = false;
+  $("#signin").hidden = true; $("#app").hidden = false;
+  note("busy", "Loading the current content…");
+  await refresh(BRANCH);
+  $("#status").innerHTML = "";
+}
+$("#tokenForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const t = $("#token").value.trim(), err = $("#tokenErr"); err.hidden = true;
+  if (!t) return;
+  $("#connect").disabled = true;
+  try { await start(t, $("#remember").checked); }
+  catch (ex) { err.textContent = friendly(ex); err.hidden = false; $("#signin").hidden = false; $("#app").hidden = true; }
+  $("#connect").disabled = false;
+});
+$("#signout").onclick = () => { store.clear(); location.reload(); };
+
+if (BRANCH !== "main") { $("#testbar").hidden = false; $("#testbar .wrap").textContent = `Test mode: changes are saved to the “${BRANCH}” branch, not the live website.`; }
+const saved0 = store.get();
+if (saved0) start(saved0).catch(ex => { $("#signin").hidden = false; $("#app").hidden = true; $("#tokenErr").textContent = friendly(ex); $("#tokenErr").hidden = false; $("#status").innerHTML = ""; });
+else $("#signin").hidden = false;
+</script>
+</body>
+</html>

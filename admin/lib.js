@@ -10,7 +10,7 @@
   /* field order for each list, matching how the content files are written */
   const LISTS = {
     publications: {file: "content/publications.js", fields: ["type", "year", "title", "authors", "journal", "details", "doi"], keepEmpty: ["details"]},
-    news:         {file: "content/news.js", fields: ["date", "type", "label", "title", "summary", "body", "link", "linkText", "photo", "photoAlt", "slug", "example"]},
+    news:         {file: "content/news.js", fields: ["date", "type", "label", "title", "summary", "body", "link", "linkText", "photo", "photoAlt", "photoFocus", "slug", "example"]},
     staff:        {file: "content/people.js", fields: ["name", "role", "photo"]},
     students:     {file: "content/people.js", fields: ["name", "role", "photo"]},
     alumni:       {file: "content/people.js", fields: ["name", "inLab", "nowAt"]},
@@ -132,8 +132,9 @@
   /* ---------- photos ---------- */
 
   /* shrinks a photo in the browser: returns a JPEG as base64 plus a preview URL.
-     With `aspect` (width / height), it first crops the centre to that shape. */
-  async function shrinkPhoto(file, maxW, maxH, aspect) {
+     With `aspect` (width / height), it first crops the centre to that shape, or the
+     `rect` {x, y, w, h} (fractions of the photo) when one was chosen in the editor. */
+  async function shrinkPhoto(file, maxW, maxH, aspect, rect) {
     let bmp;
     try { bmp = await createImageBitmap(file, {imageOrientation: "from-image"}); }
     catch (e) {
@@ -141,7 +142,10 @@
         "(on a Mac: open in Preview, File → Export, choose JPEG).");
     }
     let sx = 0, sy = 0, sw = bmp.width, sh = bmp.height;
-    if (aspect) {
+    if (rect) {
+      sx = Math.round(rect.x * bmp.width); sy = Math.round(rect.y * bmp.height);
+      sw = Math.round(rect.w * bmp.width); sh = Math.round(rect.h * bmp.height);
+    } else if (aspect) {
       if (sw / sh > aspect) { sw = Math.round(sh * aspect); sx = Math.round((bmp.width - sw) / 2); }
       else { sh = Math.round(sw / aspect); sy = Math.round((bmp.height - sh) / 2); }
     }

@@ -86,6 +86,9 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
   .crop-stage img{display:block;max-width:100%;max-height:380px;width:auto;height:auto;pointer-events:none}
   .crop-frame{position:absolute;box-shadow:0 0 0 9999px rgba(15,26,38,.55);outline:2px solid #fff;outline-offset:-2px;cursor:move;touch-action:none}
   .crop-frame:focus-visible{outline:3px solid #fff;box-shadow:0 0 0 3px var(--link),0 0 0 9999px rgba(15,26,38,.55)}
+  /* news focus point: a ring marking the spot to keep in view, nothing dimmed */
+  .crop-frame.focus{width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;outline:0;border:3px solid #fff;box-shadow:0 0 0 2px var(--ubc),0 2px 8px rgba(0,0,0,.4);background:rgba(255,255,255,.2)}
+  .crop-frame.focus:focus-visible{box-shadow:0 0 0 3px var(--link),0 2px 8px rgba(0,0,0,.4)}
   .crop-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .crop-tools input[type=range]{flex:1;min-width:120px;max-width:240px;min-height:44px;accent-color:var(--ubc)}
 
@@ -250,6 +253,7 @@ const SECTIONS = {
       {k: "body", label: "Full post (optional)", type: "textarea", rows: 6, paragraphs: true, hint: "Longer text for the post's own page. Leave a blank line between paragraphs. If empty, the summary is shown."},
       {k: "photo", label: "Photo (optional)", type: "photo", max: [1600, 1600], file: v => `news-${v.date}-${E.slugify(v.title).slice(0, 40)}`},
       {k: "photoAlt", label: "Photo description", hint: "A few words describing the photo, for people using screen readers."},
+      {k: "photoFocus", label: "Card focus point", type: "crop", focus: true, hint: "Click (or use the arrow keys on) the part of the photo that must stay in view. News cards trim the photo to fit, and keep this spot visible. The post's own page shows the whole photo."},
       {k: "link", label: "Button link (optional)", type: "url", hint: "A web address, or #/publications for the Publications page."},
       {k: "linkText", label: "Button text", hint: "For example: Read the paper"},
       {k: "label", label: "Tag text (optional)", hint: "Replaces the type on the tag, for example Preprint."}
@@ -262,7 +266,8 @@ const SECTIONS = {
       {k: "_group", label: "Group", type: "select", req: true, options: [["staff", "Postdoctoral fellows & staff"], ["students", "Graduate students"]]},
       {k: "name", label: "Name", req: true},
       {k: "role", label: "Role", req: true, list: ["PhD Candidate", "PhD Student", "MSc Student", "Postdoctoral Fellow", "Research Technician", "Research Associate", "Lab Manager"]},
-      {k: "photo", label: "Portrait", type: "photo", req: true, max: [600, 750], aspect: 4 / 5, file: v => `team-${E.slugify(v.name)}`, hint: "Cropped from the centre to a 4:5 portrait, so a head-and-shoulders photo works best."}
+      {k: "photo", label: "Portrait", type: "photo", req: true, max: [600, 750], aspect: 4 / 5, file: v => `team-${E.slugify(v.name)}`, hint: "A head-and-shoulders photo works best. After choosing it, frame the face below."},
+      {k: "_crop", label: "Portrait framing", type: "crop", aspect: 4 / 5, bake: true, hint: "Drag the box (or use the arrow keys) and the zoom slider to frame the portrait. The photo is saved cut to this box."}
     ]
   },
   alumni: {
@@ -301,8 +306,8 @@ function fieldHTML(f, id) {
       <div class="photo-pick"><img alt="" hidden><input type="file" id="${id}" name="${f.k}" accept="image/*" aria-labelledby="${id}-l"${desc}></div>
       <span class="hint photo-info"></span>${hint}</div>`;
   else if (f.type === "crop") return `<div class="field crop-field" hidden><span class="label" id="${id}-l">${esc(f.label)}</span>
-      <div class="crop-stage"><img alt=""><div class="crop-frame" tabindex="0" role="group" aria-labelledby="${id}-l"${desc}></div></div>
-      <div class="crop-tools"><label for="${id}-z">Zoom</label><input type="range" id="${id}-z" min="1" max="3" step="0.01" value="1">
+      <div class="crop-stage"><img alt=""><div class="crop-frame${f.focus ? " focus" : ""}" tabindex="0" role="group" aria-labelledby="${id}-l"${desc}></div></div>
+      <div class="crop-tools">${f.focus ? "" : `<label for="${id}-z">Zoom</label>`}<input type="range" id="${id}-z" min="1" max="3" step="0.01" value="1"${f.focus ? " hidden" : ""}>
         <button type="button" class="btn link" data-crop-reset>Reset to centre</button></div>
       <input type="hidden" id="${id}" name="${f.k}">${hint}</div>`;
   else if (f.doi) input = `<div class="row"><input type="text" id="${id}" name="${f.k}" inputmode="url" spellcheck="false"${desc}><button type="button" class="btn" data-fill>Fill in</button></div>`;
@@ -310,22 +315,30 @@ function fieldHTML(f, id) {
   return `<div class="field"><label for="${id}">${esc(f.label)}${req}</label>${input}${hint}</div>`;
 }
 
-/* gallery-preview cropper: a 4:3 frame over the whole photo. Writes "x y w h" (percent of the
-   photo's width and height) into the hidden input, or "" when the frame is the centred default */
-function cropper(wrap, input) {
+/* photo cropper: a frame of shape `aspect` over the whole photo. Writes "x y w h" (percent of the
+   photo's width and height) into the hidden input, or "" when the frame is the centred default.
+   With `focus`, it's a single point instead ("x y"), for thumbnails whose shape varies. */
+function cropper(wrap, input, {aspect = 4 / 3, focus = false} = {}) {
   const stage = wrap.querySelector(".crop-stage"), img = stage.querySelector("img");
   const frame = wrap.querySelector(".crop-frame"), zoom = wrap.querySelector("input[type=range]");
-  const A = 4 / 3;   // gallery tiles are 4:3
+  const A = aspect;
   let iw = 1, ih = 1, cx = .5, cy = .5, w = 1, h = 1;
   const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  const pct = v => Math.round(v * 1000) / 10;
   function layout() {
-    const wmax = Math.min(1, A * ih / iw);   // the widest 4:3 frame that fits the photo
+    if (focus) {
+      cx = clamp(cx, 0, 1); cy = clamp(cy, 0, 1);
+      Object.assign(frame.style, {left: cx * 100 + "%", top: cy * 100 + "%"});
+      input.value = Math.abs(cx - .5) < .001 && Math.abs(cy - .5) < .001 ? "" : pct(cx) + " " + pct(cy);
+      return;
+    }
+    const wmax = Math.min(1, A * ih / iw);   // the widest frame of this shape that fits the photo
     w = wmax / +zoom.value; h = w * iw / (A * ih);
     cx = clamp(cx, w / 2, 1 - w / 2); cy = clamp(cy, h / 2, 1 - h / 2);
     const x = cx - w / 2, y = cy - h / 2;
     Object.assign(frame.style, {left: x * 100 + "%", top: y * 100 + "%", width: w * 100 + "%", height: h * 100 + "%"});
     const centred = +zoom.value === 1 && Math.abs(cx - .5) < .001 && Math.abs(cy - .5) < .001;
-    input.value = centred ? "" : [x, y, w, h].map(v => Math.round(v * 1000) / 10).join(" ");
+    input.value = centred ? "" : [x, y, w, h].map(pct).join(" ");
   }
   function load(src, value) {
     wrap.hidden = false;
@@ -333,7 +346,8 @@ function cropper(wrap, input) {
       iw = img.naturalWidth; ih = img.naturalHeight;
       const c = String(value || "").trim().split(/\s+/).map(Number);
       zoom.value = 1; cx = cy = .5;
-      if (c.length === 4 && c.every(n => n >= 0) && c[2] > 0) {
+      if (focus && c.length === 2 && c.every(n => n >= 0 && n <= 100)) { cx = c[0] / 100; cy = c[1] / 100; }
+      else if (!focus && c.length === 4 && c.every(n => n >= 0) && c[2] > 0) {
         zoom.value = clamp(Math.min(1, A * ih / iw) / (c[2] / 100), 1, 3);
         cx = (c[0] + c[2] / 2) / 100; cy = (c[1] + c[3] / 2) / 100;
       }
@@ -366,7 +380,9 @@ function cropper(wrap, input) {
   });
   zoom.addEventListener("input", layout);
   wrap.querySelector("[data-crop-reset]").onclick = () => { zoom.value = 1; cx = cy = .5; layout(); };
-  return {load, hide};
+  /* the chosen frame as fractions of the photo, for cutting the upload to it (null = centred) */
+  const rect = () => focus || !input.value ? null : (([x, y, w, h]) => ({x, y, w, h}))(input.value.split(" ").map(n => n / 100));
+  return {load, hide, rect};
 }
 
 /* builds one add/edit form; returns helpers to fill it for editing */
@@ -381,7 +397,8 @@ function makeForm(secKey, mount) {
   let editing = null, shrunk = {};
 
   const el = k => form.elements[k];
-  const crop = sec.fields.some(f => f.type === "crop") ? cropper(form.querySelector(".crop-field"), el("crop")) : null;
+  const cropF = sec.fields.find(f => f.type === "crop");
+  const crop = cropF ? cropper(form.querySelector(".crop-field"), el(cropF.k), cropF) : null;
   const errBox = form.querySelector(".inline-err");
   function clearErrors() {
     errBox.hidden = true; errBox.textContent = "";
@@ -428,7 +445,8 @@ function makeForm(secKey, mount) {
         const img = form.querySelector(".photo-pick img");
         if (v) { img.src = "../images/web/" + encodeURI(v); img.hidden = false; form.querySelector(".photo-info").textContent = "Current photo. Choose a file to replace it."; }
       } else if (f.type === "crop") {
-        if (entry.photo) crop.load("../images/web/" + encodeURI(entry.photo), v);
+        // a saved portrait is already cut to shape; it's framed again only when a new file is chosen
+        if (entry.photo && !f.bake) crop.load("../images/web/" + encodeURI(entry.photo), v);
       } else if (el(f.k)) el(f.k).value = f.paragraphs && Array.isArray(v) ? v.join("\n\n") : (v ?? "");
     }
     form.scrollIntoView({block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
@@ -446,7 +464,11 @@ function makeForm(secKey, mount) {
       const s = await E.shrinkPhoto(inp.files[0], ...f.max, f.aspect);
       shrunk[inp.name] = s; img.src = s.url; img.hidden = false;
       info.textContent = `Ready: ${s.width} × ${s.height} px, ${s.kb} KB.`;
-      if (crop) crop.load(s.url, "");   // a new photo starts from the centred preview
+      if (crop) {   // a new photo starts from the centred frame
+        // a portrait is framed on the original; the small preview would show the old centre cut
+        if (cropF.bake) { img.hidden = true; crop.load(URL.createObjectURL(inp.files[0]), ""); }
+        else crop.load(s.url, "");
+      }
     } catch (e) { info.textContent = ""; inp.value = ""; note("err", esc(e.message)); }
   }));
 
@@ -481,6 +503,7 @@ function makeForm(secKey, mount) {
     if (v.link && !/^(https?:\/\/|#\/|mailto:)/.test(v.link)) return fail(["link"], "The button link should start with https:// (or #/ for a page on this site).");
 
     const listKey = v._group || sec.list; delete v._group;
+    delete v._crop;   // portrait framing is cut into the photo itself, not saved as text
     const old = editing;
     const entry = {...(old ? old.entry : {}), ...v};
     if (secKey === "news") delete entry.example;   // a real post replaces a placeholder
@@ -490,6 +513,10 @@ function makeForm(secKey, mount) {
     try {
       // pick file names for new photos, never overwriting an existing file
       const uploads = [];
+      if (cropF?.bake && shrunk.photo && crop.rect()) {
+        const f = sec.fields.find(f => f.k === "photo");
+        shrunk.photo = await E.shrinkPhoto(el("photo").files[0], ...f.max, f.aspect, crop.rect());
+      }
       for (const f of sec.fields.filter(f => f.type === "photo" && shrunk[f.k])) {
         let name = f.file(entry) + ".jpg", n = 2;
         while (await gh.exists("images/web/" + name)) name = f.file(entry) + "-" + n++ + ".jpg";

@@ -888,7 +888,7 @@ document.getElementById("alumni").innerHTML = alumni.map(a=>`<tr><td>${esc(a[0])
 const news = LIST("news").map(n => ({
   d: str(n.date), k: ["paper","milestone","award","event"].includes(n.type) ? n.type : "milestone",
   t: str(n.title), b: str(n.summary), body: Array.isArray(n.body) ? n.body.map(str) : n.body ? [str(n.body)] : null,
-  link: str(n.link), go: n.linkText, img: str(n.photo), alt: n.photoAlt, label: n.label, slug: n.slug, example: !!n.example
+  link: str(n.link), go: n.linkText, img: str(n.photo), alt: n.photoAlt, focus: str(n.photoFocus).trim(), label: n.label, slug: n.slug, example: !!n.example
 })).sort((a,b) => b.d.localeCompare(a.d));
 const slugify = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 news.forEach(n => {   // every post gets a unique address, #/news/<slug>
@@ -907,8 +907,9 @@ document.getElementById("news-recent").innerHTML = news.filter(n=>!n.example).sl
 const goLink = (n, cls) => /^https?:/.test(n.link)
   ? `<a class="${cls}" href="${n.link}" target="_blank" rel="noopener">${esc(n.go || "Read more")}<svg class="ext" aria-hidden="true"><use href="#ext"/></svg><span class="sr-only"> (opens in a new tab)</span></a>`
   : `<a class="${cls}" href="${n.link}">${esc(n.go || "Read more")}</a>`;
+/* "photoFocus" ("x y", set with the editor's Card focus point) keeps that spot in view as the card trims the photo */
 const thumb = n => n.img
-  ? `<img class="thumb" loading="lazy" src="${CDN}${n.img}" alt="">`
+  ? `<img class="thumb" loading="lazy" src="${CDN}${n.img}" alt=""${/^\d+(\.\d+)? \d+(\.\d+)?$/.test(n.focus) ? ` style="object-position:${n.focus.replace(" ", "% ")}%"` : ""}>`
   : `<div class="thumb thumb-art" aria-hidden="true"><svg><use href="#${KINDS[n.k][1]}"/></svg></div>`;
 function renderNews(kind){
   const items = news.filter(n => kind==="all" || n.k===kind);

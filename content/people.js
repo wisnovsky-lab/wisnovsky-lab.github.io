@@ -56,7 +56,7 @@ LAB.students = [
   {
     name: "Halen Kovacs",
     role: "PhD Candidate",
-    photo: "team-halen-kovacs.jpg"
+    photo: "team-halen-kovacs-2.jpg"
   },
   {
     name: "Anjali Parthasarathy",

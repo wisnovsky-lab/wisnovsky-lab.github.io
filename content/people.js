@@ -34,7 +34,7 @@ LAB.staff = [
   {
     name: "Dr. Tigist Batu",
     role: "Postdoctoral Fellow",
-    photo: "team-dr-tigist-batu.jpg"
+    photo: "team-dr-tigist-batu-2.jpg"
   },
   {
     name: "Jimmy Kim",

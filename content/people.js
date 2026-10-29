@@ -39,7 +39,12 @@ LAB.staff = [
   {
     name: "Jimmy Kim",
     role: "Research Technician",
-    photo: "team-jimmy-kim.jpg"
+    photo: "team-jimmy-kim.jpg",
+    bio: [
+      "I build and run CRISPR screens to hunt down genes that control cell-surface glycosylation"
+    ],
+    linkedin: "https://www.linkedin.com/in/jimmykim014/",
+    scholar: "https://scholar.google.com/citations?user=A4f0oakAAAAJ&hl=en&oi=ao"
   }
 ];
 

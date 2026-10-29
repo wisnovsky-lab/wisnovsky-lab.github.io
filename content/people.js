@@ -9,6 +9,18 @@
     photo: "team-firstname-lastname.jpg"
   },
 
+   Clicking a card opens the person's profile. Optional extras (add them before the closing },
+   each line ending in a comma except the last):
+    bio: "A few sentences about them.",     (without one, the profile says "Coming Soon!")
+    linkedin: "https://www.linkedin.com/in/…",
+    scholar: "https://scholar.google.com/citations?user=…",
+    orcid: "https://orcid.org/…",
+    x: "https://x.com/…",
+    bluesky: "https://bsky.app/profile/…",
+    github: "https://github.com/…",
+    website: "https://…"
+   Each link becomes a button on the profile; leave one out and its button doesn't appear.
+
    When someone leaves: delete their entry from the team list and add them to the alumni list below.
 */
 

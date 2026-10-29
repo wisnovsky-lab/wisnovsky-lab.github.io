@@ -69,6 +69,9 @@ if (location.protocol === "http:" && /(^|\.)wisnovskylab\.ca$/.test(location.hos
   .field label,.field .label{display:block;font-weight:500;margin-bottom:4px}
   .field .hint{display:block;color:var(--ink-3);font-size:.88rem;margin-top:3px}
   .req{color:var(--err);margin-left:2px}
+  .field-group{margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--line)}
+  .field-group h3{margin:0}
+  .field-group p{margin:2px 0 0;color:var(--ink-3);font-size:.88rem}
   input[type=text],input[type=number],input[type=month],input[type=password],input[type=url],select,textarea{
     width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line-strong);border-radius:var(--radius);padding:9px 11px;min-height:44px}
   textarea{resize:vertical;line-height:1.45}
@@ -267,7 +270,16 @@ const SECTIONS = {
       {k: "name", label: "Name", req: true},
       {k: "role", label: "Role", req: true, list: ["PhD Candidate", "PhD Student", "MSc Student", "Postdoctoral Fellow", "Research Technician", "Research Associate", "Lab Manager"]},
       {k: "photo", label: "Portrait", type: "photo", req: true, max: [600, 750], aspect: 4 / 5, file: v => `team-${E.slugify(v.name)}`, hint: "A head-and-shoulders photo works best. After choosing it, frame the face below."},
-      {k: "_crop", label: "Portrait framing", type: "crop", aspect: 4 / 5, bake: true, hint: "Drag the box (or use the arrow keys) and the zoom slider to frame the portrait. The photo is saved cut to this box."}
+      {k: "_crop", label: "Portrait framing", type: "crop", aspect: 4 / 5, bake: true, hint: "Drag the box (or use the arrow keys) and the zoom slider to frame the portrait. The photo is saved cut to this box."},
+      {k: "bio", label: "Short bio (optional)", type: "textarea", rows: 5, paragraphs: true, hint: "Shown when visitors click this person's card. A few sentences is plenty; leave a blank line between paragraphs. If empty, the profile says “Coming Soon!”"},
+      {k: "linkedin", label: "LinkedIn", type: "url", placeholder: "https://www.linkedin.com/in/…",
+        group: ["Profile links (optional)", "Paste the full web address. Each link becomes a button on the profile; leave a box empty and that button doesn't appear."]},
+      {k: "scholar", label: "Google Scholar", type: "url", placeholder: "https://scholar.google.com/citations?user=…"},
+      {k: "orcid", label: "ORCID", type: "url", placeholder: "https://orcid.org/0000-…"},
+      {k: "x", label: "X (Twitter)", type: "url", placeholder: "https://x.com/…"},
+      {k: "bluesky", label: "Bluesky", type: "url", placeholder: "https://bsky.app/profile/…"},
+      {k: "github", label: "GitHub", type: "url", placeholder: "https://github.com/…"},
+      {k: "website", label: "Personal website", type: "url", placeholder: "https://…"}
     ]
   },
   alumni: {
@@ -299,6 +311,7 @@ function fieldHTML(f, id) {
   const hint = f.hint ? `<span class="hint" id="${id}-h">${esc(f.hint)}</span>` : "";
   const desc = f.hint ? ` aria-describedby="${id}-h"` : "";
   const r = f.req && f.type !== "photo" ? " required" : "";
+  const group = f.group ? `<div class="field-group"><h3>${esc(f.group[0])}</h3><p>${esc(f.group[1])}</p></div>` : "";
   let input;
   if (f.type === "select") input = `<select id="${id}" name="${f.k}"${r}${desc}>${f.options.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select>`;
   else if (f.type === "textarea") input = `<textarea id="${id}" name="${f.k}" rows="${f.rows || 3}"${r}${desc}></textarea>`;
@@ -311,8 +324,8 @@ function fieldHTML(f, id) {
         <button type="button" class="btn link" data-crop-reset>Reset to centre</button></div>
       <input type="hidden" id="${id}" name="${f.k}">${hint}</div>`;
   else if (f.doi) input = `<div class="row"><input type="text" id="${id}" name="${f.k}" inputmode="url" spellcheck="false"${desc}><button type="button" class="btn" data-fill>Fill in</button></div>`;
-  else input = `<input type="${f.type === "number" ? "number" : "text"}" id="${id}" name="${f.k}"${f.type === "date" ? ' placeholder="2026-10" pattern="\\d{4}(-\\d{2})?"' : ""}${f.type === "number" ? ' min="1990" max="2100"' : ""}${f.list ? ` list="${id}-list"` : ""}${r}${desc}>${f.list ? `<datalist id="${id}-list">${f.list.map(o => `<option value="${esc(o)}">`).join("")}</datalist>` : ""}`;
-  return `<div class="field"><label for="${id}">${esc(f.label)}${req}</label>${input}${hint}</div>`;
+  else input = `<input type="${f.type === "number" ? "number" : "text"}" id="${id}" name="${f.k}"${f.type === "date" ? ' placeholder="2026-10" pattern="\\d{4}(-\\d{2})?"' : ""}${f.type === "url" ? ' inputmode="url" spellcheck="false" autocapitalize="off"' : ""}${f.placeholder ? ` placeholder="${esc(f.placeholder)}"` : ""}${f.type === "number" ? ' min="1990" max="2100"' : ""}${f.list ? ` list="${id}-list"` : ""}${r}${desc}>${f.list ? `<datalist id="${id}-list">${f.list.map(o => `<option value="${esc(o)}">`).join("")}</datalist>` : ""}`;
+  return `${group}<div class="field"><label for="${id}">${esc(f.label)}${req}</label>${input}${hint}</div>`;
 }
 
 /* photo cropper: a frame of shape `aspect` over the whole photo. Writes "x y w h" (percent of the
@@ -501,6 +514,11 @@ function makeForm(secKey, mount) {
     if (v.year && !/^(19|20)\d\d$/.test(String(v.year))) return fail(["year"], "The year should look like " + thisYear + ".");
     if (v.date && !/^(19|20)\d\d(-(0[1-9]|1[0-2]))?$/.test(v.date)) return fail(["date"], "The date should look like " + thisMonth + " (year-month) or just " + thisYear + ".");
     if (v.link && !/^(https?:\/\/|#\/|mailto:)/.test(v.link)) return fail(["link"], "The button link should start with https:// (or #/ for a page on this site).");
+    // profile links: "linkedin.com/in/jane" is accepted and saved as https://linkedin.com/in/jane
+    const urlFields = sec.fields.filter(f => f.type === "url" && f.k !== "link");
+    urlFields.forEach(f => { if (v[f.k] && !/^https?:\/\//i.test(v[f.k])) v[f.k] = "https://" + v[f.k].replace(/^\/+/, ""); });
+    const badUrl = urlFields.filter(f => v[f.k] && !/^https?:\/\/[^\s\/]+\.[^\s]+$/i.test(v[f.k]));
+    if (badUrl.length) return fail(badUrl.map(f => f.k), "These don't look like web addresses: " + badUrl.map(f => f.label).join(", ") + ". Paste the full link, starting with https://");
 
     const listKey = v._group || sec.list; delete v._group;
     delete v._crop;   // portrait framing is cut into the photo itself, not saved as text

@@ -84,6 +84,11 @@ const list = (rel, name) => {
     const label = `${group} #${i + 1} (${m.name || "no name"})`;
     need(rel, label, m, ["name", "role", "photo"]);
     checkImage(rel, label, m.photo);
+    if (m.bio != null && typeof m.bio !== "string" && !Array.isArray(m.bio))
+      err(rel, `${label}: bio should be "text" or ["paragraph", "paragraph"].`);
+    for (const k of ["linkedin", "scholar", "orcid", "x", "bluesky", "github", "website"])
+      if (m[k] && !/^https?:\/\//.test(String(m[k]).trim()))
+        err(rel, `${label}: ${k} "${m[k]}" should start with https:// (otherwise its button doesn't show).`);
   });
   list(rel, "alumni").forEach((a, i) => {
     const label = `alumni #${i + 1} (${a.name || "no name"})`;

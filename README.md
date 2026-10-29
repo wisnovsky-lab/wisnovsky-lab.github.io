@@ -6,7 +6,7 @@ Go to **[www.wisnovskylab.ca/admin/](https://www.wisnovskylab.ca/admin/)** and u
 
 - **Add a publication.** Paste its DOI and click **Fill in**; the title, authors, journal and year fill themselves.
 - **Post news,** with an optional photo.
-- **Add or edit team members,** reorder them, or move someone to alumni.
+- **Add or edit team members,** including their profile bio and links (LinkedIn, Google Scholar…), reorder them, or move someone to alumni.
 - **Add lab life photos.**
 
 Photos are shrunk to the right size automatically. Click **Save**, and the website updates about a minute later.
@@ -115,6 +115,18 @@ In `content/people.js`:
       photo: "team-jane-doe.jpg"
     },
   ```
+- **Profile (optional):** clicking a card opens a small profile window. Add a `bio` and any of `linkedin`, `scholar`, `orcid`, `x`, `bluesky`, `github` or `website` (full links starting with `https://`):
+  ```js
+    {
+      name: "Jane Doe",
+      role: "MSc Student",
+      photo: "team-jane-doe.jpg",
+      bio: "Jane studies how glycans shape immune recognition.",
+      linkedin: "https://www.linkedin.com/in/janedoe",
+      scholar: "https://scholar.google.com/citations?user=XXXX"
+    },
+  ```
+  Without a bio, the profile says "Coming Soon!". Only the links that are filled in get a button.
 - **Change a role** (e.g. MSc Student to PhD Candidate): edit the text in `role`.
 - **Someone leaves:** delete their entry and add them to `LAB.alumni`:
   ```js

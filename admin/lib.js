@@ -11,8 +11,8 @@
   const LISTS = {
     publications: {file: "content/publications.js", fields: ["type", "year", "title", "authors", "journal", "details", "doi"], keepEmpty: ["details"]},
     news:         {file: "content/news.js", fields: ["date", "type", "label", "title", "summary", "body", "link", "linkText", "photo", "photoAlt", "photoFocus", "slug", "example"]},
-    staff:        {file: "content/people.js", fields: ["name", "role", "photo"]},
-    students:     {file: "content/people.js", fields: ["name", "role", "photo"]},
+    staff:        {file: "content/people.js", fields: ["name", "role", "photo", "bio", "linkedin", "scholar", "orcid", "x", "bluesky", "github", "website"]},
+    students:     {file: "content/people.js", fields: ["name", "role", "photo", "bio", "linkedin", "scholar", "orcid", "x", "bluesky", "github", "website"]},
     alumni:       {file: "content/people.js", fields: ["name", "inLab", "nowAt"]},
     photos:       {file: "content/photos.js", fields: ["photo", "caption", "date", "alt", "crop"], keepEmpty: ["photo"]}
   };

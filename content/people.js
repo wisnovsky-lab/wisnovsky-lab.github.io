@@ -81,7 +81,10 @@ LAB.students = [
   {
     name: "Anjali Parthasarathy",
     role: "PhD Student",
-    photo: "team-anjali-parthasarathy.jpg"
+    photo: "team-anjali-parthasarathy.jpg",
+    bio: [
+      "I like T cells and I never stop yapping about spectral flow"
+    ]
   },
   {
     name: "Andrew Huang",
